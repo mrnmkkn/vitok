@@ -23,8 +23,8 @@
   position:relative;
   overflow:hidden;
   background:
-    radial-gradient(circle at 50% 18%, rgba(241,216,154,.16) 0 9%, transparent 36%),
-    radial-gradient(circle at 42% 43%, rgba(168,137,199,.18) 0 13%, transparent 38%),
+    radial-gradient(circle at 50% 20%, rgba(241,216,154,.18) 0 10%, rgba(241,216,154,.07) 28%, transparent 58%),
+    radial-gradient(circle at 42% 44%, rgba(168,137,199,.20) 0 14%, rgba(168,137,199,.07) 34%, transparent 64%),
     radial-gradient(circle at 72% 18%, rgba(214,177,107,.12) 0 8%, transparent 34%),
     radial-gradient(circle at 28% 76%, rgba(101,55,137,.22) 0 12%, transparent 42%),
     radial-gradient(circle at 50% 104%, rgba(214,177,107,.13) 0 7%, transparent 34%),
@@ -42,7 +42,7 @@
   pointer-events:none;
   background:
     radial-gradient(circle at 50% 34%, transparent 0 34%, rgba(0,0,0,.18) 76%, rgba(0,0,0,.38) 100%),
-    linear-gradient(180deg, rgba(255,255,255,.055), transparent 18%, transparent 72%, rgba(255,255,255,.025));
+    linear-gradient(180deg, rgba(255,255,255,.032), transparent 30%, transparent 72%, rgba(255,255,255,.025));
   mix-blend-mode:screen;
   opacity:.75;
 }
@@ -108,22 +108,7 @@ function qConnector(svg, p1, p2, sag, cls="sep"){
 function render(){
   const svg = document.getElementById("svg");
   svg.innerHTML = `
-    <defs>
-      <radialGradient id="innerGold" cx="50%" cy="22%" r="62%">
-        <stop offset="0%" stop-color="rgba(241,216,154,.26)"/>
-        <stop offset="48%" stop-color="rgba(214,177,107,.06)"/>
-        <stop offset="100%" stop-color="rgba(214,177,107,0)"/>
-      </radialGradient>
-      <radialGradient id="innerViolet" cx="44%" cy="46%" r="66%">
-        <stop offset="0%" stop-color="rgba(168,137,199,.18)"/>
-        <stop offset="58%" stop-color="rgba(91,48,128,.05)"/>
-        <stop offset="100%" stop-color="rgba(91,48,128,0)"/>
-      </radialGradient>
-    </defs>
-    <rect x="245" y="24" width="490" height="590" rx="0" fill="url(#innerViolet)" opacity=".82"/>
-    <rect x="245" y="24" width="490" height="590" rx="0" fill="url(#innerGold)" opacity=".72"/>
-
-    <circle class="bgGlowCircle" cx="490" cy="350" r="250"/>
+<circle class="bgGlowCircle" cx="490" cy="350" r="250"/>
     <circle class="bgGlowCircle" cx="490" cy="350" r="174"/>
     <path class="bgVeil" d="M202 430 C310 585 650 590 778 430"/>
     <path class="bgVeil" d="M245 190 C360 70 620 70 735 190"/>
