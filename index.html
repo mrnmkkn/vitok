@@ -15,9 +15,14 @@
 }
 
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{
+  scroll-behavior:smooth;
+  background:#000;
+}
+
 body{
   margin:0;
+  background-color:#000;
   min-height:100vh;
   color:var(--ink);
   font-family:"Calibri Light", Calibri, Arial, sans-serif;
@@ -113,6 +118,10 @@ h1{
 }
 
 input[type="date"]{
+  -webkit-appearance:none;
+  appearance:none;
+  line-height:1.2;
+
   display:block;
   width:100%;
   max-width:100%;
@@ -538,3 +547,32 @@ document.getElementById('btn').onclick = render;
 document.getElementById('birth').onchange = render;
 
 </script></body></html>
+
+<style>
+@supports (padding:max(0px)) {
+  body{
+    padding-top:max(12px, env(safe-area-inset-top));
+    padding-bottom:max(28px, env(safe-area-inset-bottom));
+  }
+}
+@media(max-width:430px){
+  input[type="date"]{
+    width:100% !important;
+    max-width:100% !important;
+    min-width:0 !important;
+    display:block;
+    padding:16px 14px !important;
+    font-size:16px !important;
+    border-radius:18px !important;
+    overflow:hidden;
+  }
+  .controls{
+    width:100%;
+    overflow:hidden;
+  }
+  .hero,.info,.chartShell,.cta{
+    margin-left:0;
+    margin-right:0;
+  }
+}
+</style>
