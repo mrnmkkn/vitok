@@ -492,8 +492,8 @@ function render(){
   const destiny = [destinyBase, destinyYear, destinyMiddle, destinyTop];
   // Линия предназначения чуть отделена от портрета и выстроена почти по прямой
   // между нижней точкой (сумма всей даты) и верхней точкой предназначения.
-  const destinyBottom = {x:xA3+84, y:yA3};
-  const destinyTopPoint = {x:portraitCenter, y:yC-64};
+  const destinyBottom = {x:xA3+94, y:yA3};
+  const destinyTopPoint = {x:490, y:yC-64};
   function pointOnDestinyLine(targetY){
     const t = (targetY - destinyBottom.y) / (destinyTopPoint.y - destinyBottom.y);
     return {
