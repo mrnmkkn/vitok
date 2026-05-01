@@ -1,77 +1,401 @@
 <!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/><title>Метод Витка — карта пути</title><style>
-:root{--bg0:#07050d;--bg1:#120d1c;--bg2:#251633;--ink:#f9efe4;--muted:#c5b6cf;--gold:#d9b56f;--gold2:#f4dea3;--lineStrong:rgba(250,236,218,.78);--panel:rgba(22,16,31,.78)}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:radial-gradient(circle at 50% -8%,rgba(178,116,206,.34) 0 12%,transparent 42%),radial-gradient(circle at 12% 12%,rgba(217,181,111,.15) 0 9%,transparent 33%),radial-gradient(circle at 92% 30%,rgba(91,48,128,.42) 0 10%,transparent 36%),linear-gradient(160deg,var(--bg0),var(--bg1) 45%,var(--bg2));padding:18px 14px 34px}.page{width:min(100%,480px);margin:0 auto}.hero,.info,.chartShell,.cta{position:relative;overflow:hidden;border-radius:28px;background:linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.025)),var(--panel);border:1px solid rgba(255,239,214,.15);box-shadow:0 24px 70px rgba(0,0,0,.34),inset 0 0 0 1px rgba(255,255,255,.035)}.hero{padding:28px 20px 20px;margin-bottom:14px;min-height:330px}.hero:before{content:"";position:absolute;inset:14px;border-radius:22px;border:1px solid rgba(217,181,111,.15);pointer-events:none}.hero:after{content:"";position:absolute;width:290px;height:290px;right:-120px;top:-130px;border-radius:50%;border:1px solid rgba(217,181,111,.17);box-shadow:0 0 0 34px rgba(217,181,111,.025),0 0 0 72px rgba(170,139,200,.025)}.eyebrow{margin:0 0 12px;color:rgba(244,222,163,.78);font-size:11px;letter-spacing:.28em;text-transform:uppercase;font-weight:750}h1{font-family:Georgia,"Times New Roman",serif;margin:0 0 10px;font-size:42px;font-weight:500;line-height:.98;letter-spacing:-.04em;color:#fff2df}.lead{margin:0 0 20px;color:rgba(239,223,241,.72);line-height:1.5;font-size:15px}.controls{display:grid;gap:10px;position:relative;z-index:2;min-width:0}input[type="date"]{display:block;width:100%;max-width:100%;min-width:0;min-height:52px;color:var(--ink);color-scheme:dark;background:rgba(255,248,236,.08);border:1px solid rgba(255,236,205,.20);border-radius:18px;padding:14px 16px;font-size:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 16px 34px rgba(0,0,0,.14);-webkit-appearance:none;appearance:none}button,.linkButton{display:inline-flex;align-items:center;justify-content:center;width:100%;min-height:52px;background:linear-gradient(135deg,#f0d99b,#b8833b 70%,#8f6128);color:#160d17;border:none;border-radius:18px;padding:14px 18px;font-size:16px;font-weight:800;text-decoration:none;cursor:pointer;box-shadow:0 16px 34px rgba(217,181,111,.19),inset 0 1px 0 rgba(255,255,255,.40)}button.secondary{background:rgba(255,248,236,.07);color:var(--ink);border:1px solid rgba(255,236,205,.18);box-shadow:none;min-height:46px;font-size:14px}.info{padding:16px;margin-bottom:14px}details{border-radius:20px;background:rgba(10,7,16,.34);border:1px solid rgba(255,239,214,.10);padding:13px 14px}summary{cursor:pointer;color:#fff2df;font-weight:750;list-style:none}summary::-webkit-details-marker{display:none}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.item{padding:12px;min-height:104px;border-radius:18px;background:rgba(255,248,236,.045);border:1px solid rgba(226,206,236,.12)}.item b{display:block;margin-bottom:6px;color:#fff2df;font-size:14px}.item span,.cta p{color:var(--muted);font-size:13px;line-height:1.45}.chartShell{padding:10px;margin-bottom:14px}.chartTop{display:flex;gap:8px;padding:8px 8px 10px}.chartCard{position:relative;border-radius:24px;overflow:hidden;background:rgba(6,4,11,.48);border:1px solid rgba(255,239,214,.13)}.chartCard:before{content:"";position:absolute;inset:10px;border-radius:18px;border:1px solid rgba(217,181,111,.13);pointer-events:none;z-index:0}svg{width:100%;height:720px;display:block;position:relative;z-index:1;overflow:visible}.hint{text-align:center;padding:10px 8px 2px;color:rgba(197,182,207,.72);font-size:12px}.cta{padding:18px;margin-bottom:12px}.cta h2{font-family:Georgia,"Times New Roman",serif;font-size:25px;font-weight:500;margin:0 0 8px;color:#fff2df}.cta p{margin:0 0 13px}.fine{text-align:center;color:rgba(197,182,207,.55);font-size:12px;line-height:1.4;padding:4px 10px 0}body.focus .hero,body.focus .info,body.focus .cta,body.focus .fine{display:none}body.focus{padding-top:10px}body.focus .chartShell{margin-bottom:0}body.focus svg{height:calc(100vh - 104px);min-height:620px}.vitokSpiral{fill:none;stroke:rgba(244,222,163,.125);stroke-width:1.15;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 9px rgba(217,181,111,.08))}.vitokSpiralSoft{fill:none;stroke:rgba(226,206,236,.070);stroke-width:.9;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1.5 9}.vitokSpark{fill:rgba(241,216,154,.46)}.star{fill:rgba(241,216,154,.78)}.bgVeil{fill:none;stroke:rgba(226,206,236,.060);stroke-width:.9;stroke-dasharray:2 10;stroke-linecap:round}.bgGlowCircle{fill:rgba(255,248,236,.018);stroke:rgba(217,181,111,.070);stroke-width:1}.arc{fill:none;stroke:rgba(226,206,236,.34);stroke-width:1.05;stroke-dasharray:2 7;stroke-linecap:round;filter:none}.arc.soft{stroke:rgba(226,206,236,.34);stroke-width:1.05;stroke-dasharray:2 7;stroke-linecap:round;filter:none}.num{font-family:"Avenir Next","Segoe UI",Arial,sans-serif;font-variant-numeric:tabular-nums lining-nums;font-feature-settings:"tnum" 1,"lnum" 1;font-size:22px;text-anchor:middle;dominant-baseline:middle;font-weight:720;fill:#fff4e2;text-shadow:0 0 10px rgba(8,6,16,.55),0 2px 6px rgba(8,6,16,.45);font-weight:700;fill:#f7ead8}.portraitHalo{fill:rgba(255,248,236,.055);stroke:rgba(255,239,214,.16);stroke-width:1}.dateText{font-family:"Avenir Next","Segoe UI",Arial,sans-serif;font-size:14px;letter-spacing:.30em;text-anchor:middle;dominant-baseline:middle;fill:rgba(248,240,230,.70);font-weight:700}.ageText{font-size:13px;text-anchor:middle;dominant-baseline:middle;fill:rgba(191,174,200,.68);font-weight:650}.sep{stroke:rgba(226,206,236,.30);stroke-width:1.05;stroke-dasharray:2 7;stroke-linecap:round}.cycleCircle{fill:rgba(255,248,236,.045);stroke:rgba(226,206,236,.42);stroke-width:1.65}.challengeSquare{fill:rgba(255,248,236,.035);stroke:rgba(214,177,107,.38);stroke-width:1.65;rx:9}.destinyLine{stroke:rgba(214,177,107,.80);stroke-width:1.05;stroke-dasharray:2 7;fill:none;stroke-linecap:round;stroke-linejoin:round;filter:none}.destinyCircle{fill:rgba(214,177,107,.10);stroke:rgba(241,216,154,.92);stroke-width:1.9;filter:drop-shadow(0 0 12px rgba(214,177,107,.22))}.destinyHalo{fill:rgba(214,177,107,.055);stroke:rgba(214,177,107,.14);stroke-width:1}
-.dateChip{fill:rgba(217,181,111,.105);stroke:rgba(244,222,163,.42);stroke-width:1.25;filter:drop-shadow(0 0 12px rgba(217,181,111,.12))}
-.dateDigit{font-family:"Avenir Next","Segoe UI",Arial,sans-serif;font-variant-numeric:tabular-nums lining-nums;font-feature-settings:"tnum" 1,"lnum" 1;font-size:22px;text-anchor:middle;dominant-baseline:middle;font-weight:720;fill:#f4dea3;stroke-width:3px}
-.dateDot{font-family:"Avenir Next","Segoe UI",Arial,sans-serif;font-variant-numeric:tabular-nums lining-nums;font-feature-settings:"tnum" 1,"lnum" 1;font-size:22px;text-anchor:middle;dominant-baseline:middle;font-weight:720;fill:#f4dea3;stroke-width:3px}
-.pathLine{stroke:rgba(244,222,163,.30);stroke-width:1.05;stroke-dasharray:2 7;stroke-linecap:round}
-@media(min-width:760px){.page{width:min(100%,1040px)}.hero{min-height:auto}.controls{grid-template-columns:260px 220px}.info,.cta{padding:20px}svg{height:650px}}@media(max-width:390px){h1{font-size:38px}svg{height:580px}.grid{grid-template-columns:1fr}}
+:root{
+  --dark:#25262b;
+  --raspberry:#e92b69;
+  --coral:#f86b7d;
+  --cream:#f4d7b8;
+  --lavender:#b2abec;
+  --violet:#9656ce;
 
-@media (max-width:430px){
-  body{padding:12px 8px 28px}
-  .page{width:100%}
-  .hero{padding:24px 16px 18px}
-  .chartShell{padding:6px}
-  .chartTop{padding:6px 6px 8px}
-  .chartCard{border-radius:22px}
-  svg{height:740px}
-  body.focus svg{height:calc(100vh - 84px);min-height:740px}
+  --ink:#fff8f3;
+  --muted:rgba(255,248,243,.74);
+  --soft:rgba(255,248,243,.16);
+  --panel:rgba(255,255,255,.055);
+  --glass:rgba(255,255,255,.075);
 }
 
-/* premium gradient layer for the card */
-.chartCard{
-  position:relative;
-  overflow:hidden;
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  min-height:100vh;
+  color:var(--ink);
+  font-family:"Calibri Light", Calibri, Arial, sans-serif;
   background:
-    radial-gradient(circle at 50% 20%, rgba(241,216,154,.18) 0 10%, rgba(241,216,154,.07) 28%, transparent 58%),
-    radial-gradient(circle at 42% 44%, rgba(168,137,199,.20) 0 14%, rgba(168,137,199,.07) 34%, transparent 64%),
-    radial-gradient(circle at 72% 18%, rgba(214,177,107,.12) 0 8%, transparent 34%),
-    radial-gradient(circle at 28% 76%, rgba(101,55,137,.22) 0 12%, transparent 42%),
-    radial-gradient(circle at 50% 104%, rgba(214,177,107,.13) 0 7%, transparent 34%),
-    linear-gradient(165deg, rgba(8,6,16,.98), rgba(19,13,32,.98) 44%, rgba(42,24,55,.98));
-  box-shadow:
-    inset 0 0 0 1px rgba(255,239,214,.08),
-    inset 0 28px 80px rgba(255,255,255,.025),
-    inset 0 -34px 90px rgba(0,0,0,.28),
-    0 24px 90px rgba(0,0,0,.45);
+    radial-gradient(circle at 18% 6%, rgba(233,43,105,.46) 0 8%, transparent 28%),
+    radial-gradient(circle at 84% 12%, rgba(178,171,236,.40) 0 10%, transparent 32%),
+    radial-gradient(circle at 50% 48%, rgba(248,107,125,.18) 0 18%, transparent 56%),
+    radial-gradient(circle at 20% 88%, rgba(150,86,206,.35) 0 12%, transparent 40%),
+    linear-gradient(145deg,#25262b 0%,#302c3d 44%,#4e315f 100%);
+  padding:18px 12px 36px;
 }
-.chartCard::before{
+
+body:before{
   content:"";
-  position:absolute;
+  position:fixed;
   inset:0;
   pointer-events:none;
   background:
-    radial-gradient(circle at 50% 34%, transparent 0 34%, rgba(0,0,0,.18) 76%, rgba(0,0,0,.38) 100%),
-    linear-gradient(180deg, rgba(255,255,255,.032), transparent 30%, transparent 72%, rgba(255,255,255,.025));
+    radial-gradient(circle at 50% -10%, rgba(244,215,184,.18), transparent 32%),
+    linear-gradient(180deg, rgba(255,255,255,.04), transparent 26%, rgba(0,0,0,.10));
   mix-blend-mode:screen;
-  opacity:.75;
+  opacity:.72;
 }
-.chartCard::after{
+
+.page{
+  width:min(100%,480px);
+  margin:0 auto;
+  position:relative;
+  z-index:1;
+}
+
+.hero,.info,.chartShell,.cta{
+  position:relative;
+  overflow:hidden;
+  border-radius:30px;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.045) 48%,rgba(178,171,236,.055)),
+    rgba(255,255,255,.035);
+  backdrop-filter:blur(18px) saturate(1.15);
+  -webkit-backdrop-filter:blur(18px) saturate(1.15);
+  border:1px solid rgba(255,248,243,.18);
+  box-shadow:0 24px 70px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.16), inset 0 -1px 0 rgba(178,171,236,.08);
+}
+
+.hero{
+  padding:28px 20px 22px;
+  margin-bottom:14px;
+}
+
+.hero:before,.info:before,.cta:before{
   content:"";
   position:absolute;
-  inset:-40px;
+  inset:1px;
+  border-radius:29px;
   pointer-events:none;
-  background-image:
-    radial-gradient(circle, rgba(241,216,154,.28) 0 1px, transparent 1.6px),
-    radial-gradient(circle, rgba(226,206,236,.16) 0 .8px, transparent 1.4px);
-  background-size:92px 92px, 63px 63px;
-  background-position:12px 18px, 38px 54px;
-  opacity:.18;
-  mask-image:radial-gradient(circle at 50% 48%, black 0 55%, transparent 86%);
+  background:linear-gradient(135deg,rgba(255,255,255,.16),transparent 34%,rgba(178,171,236,.07) 78%,transparent);
+  opacity:.52;
 }
-svg{
+.hero:after,.chartCard:before{display:none}
+
+.eyebrow{
+  margin:0 0 12px;
+  color:rgba(244,215,184,.86);
+  font-family:Calibri,Arial,sans-serif;
+  font-size:11px;
+  letter-spacing:.30em;
+  text-transform:uppercase;
+  font-weight:700;
+}
+
+h1{
+  font-family:"Calibri Light",Calibri,Arial,sans-serif;
+  margin:0 0 10px;
+  font-size:48px;
+  font-weight:300;
+  line-height:.95;
+  letter-spacing:.01em;
+  color:#fff8f3;
+  text-shadow:0 14px 40px rgba(233,43,105,.22);
+}
+
+.lead{
+  margin:0 0 20px;
+  color:var(--muted);
+  line-height:1.45;
+  font-size:16px;
+}
+
+.controls{
+  display:grid;
+  gap:10px;
+  min-width:0;
+}
+
+input[type="date"]{
+  display:block;
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  min-height:54px;
+  color:var(--ink);
+  color-scheme:dark;
+  background:rgba(255,255,255,.075);
+  border:1px solid rgba(255,248,243,.18);
+  border-radius:20px;
+  padding:14px 16px;
+  font-family:Calibri,Arial,sans-serif;
+  font-size:17px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10);
+  outline:none;
+}
+
+button,.linkButton{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  min-height:54px;
+  border:none;
+  border-radius:20px;
+  padding:14px 18px;
+  font-family:Calibri,Arial,sans-serif;
+  font-size:17px;
+  font-weight:700;
+  text-decoration:none;
+  cursor:pointer;
+  color:#fff8f3;
   background:
-    radial-gradient(circle at 50% 30%, rgba(255,244,214,.045), transparent 34%),
-    radial-gradient(circle at 64% 17%, rgba(214,177,107,.09), transparent 24%),
-    radial-gradient(circle at 37% 58%, rgba(168,137,199,.09), transparent 32%),
+    linear-gradient(135deg,rgba(233,43,105,.96),rgba(248,107,125,.88) 48%,rgba(150,86,206,.84));
+  box-shadow:0 18px 42px rgba(233,43,105,.25), inset 0 1px 0 rgba(255,255,255,.26);
+}
+
+button:hover,.linkButton:hover{filter:brightness(1.04)}
+
+.info{
+  padding:15px;
+  margin-bottom:14px;
+}
+
+details{
+  border-radius:24px;
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,248,243,.13);
+  padding:14px;
+}
+
+summary{
+  cursor:pointer;
+  color:#fff8f3;
+  font-family:Calibri,Arial,sans-serif;
+  font-weight:700;
+  list-style:none;
+}
+summary::-webkit-details-marker{display:none}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:12px;
+}
+
+.item{
+  padding:13px;
+  min-height:104px;
+  border-radius:22px;
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,248,243,.105);
+}
+
+.item b{
+  display:block;
+  margin-bottom:7px;
+  color:#fff8f3;
+  font-family:Calibri,Arial,sans-serif;
+  font-size:14px;
+  font-weight:700;
+}
+
+.item span,.cta p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.42;
+}
+
+.chartShell{
+  padding:8px;
+  margin-bottom:14px;
+}
+
+.chartCard{
+  position:relative;
+  border-radius:28px;
+  overflow:hidden;
+  border:1px solid rgba(244,215,184,.18);
+  background:
+    radial-gradient(circle at 50% 18%, rgba(244,215,184,.13) 0 9%, transparent 36%),
+    radial-gradient(circle at 28% 32%, rgba(233,43,105,.15) 0 12%, transparent 44%),
+    radial-gradient(circle at 78% 62%, rgba(178,171,236,.13) 0 12%, transparent 44%),
+    radial-gradient(circle at 50% 106%, rgba(150,86,206,.22) 0 10%, transparent 38%),
+    linear-gradient(160deg,#24262b 0%,#2d2d39 42%,#433450 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.055),
+    inset 0 32px 90px rgba(255,255,255,.035),
+    inset 0 -40px 90px rgba(0,0,0,.16),
+    0 26px 80px rgba(0,0,0,.26);
+}
+
+.chartCard:after{
+  content:"";
+  position:absolute;
+  inset:-20px;
+  pointer-events:none;
+  background:
+    radial-gradient(circle, rgba(244,215,184,.32) 0 .8px, transparent 1.4px),
+    radial-gradient(circle, rgba(178,171,236,.20) 0 .7px, transparent 1.3px);
+  background-size:94px 94px,67px 67px;
+  background-position:18px 12px,46px 48px;
+  opacity:.13;
+  mask-image:radial-gradient(circle at 50% 48%, black 0 52%, transparent 88%);
+}
+
+svg{
+  width:100%;
+  height:720px;
+  display:block;
+  position:relative;
+  z-index:1;
+  overflow:visible;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(244,215,184,.045), transparent 34%),
+    radial-gradient(circle at 40% 56%, rgba(233,43,105,.045), transparent 28%),
     transparent;
 }
 
+.hint{
+  text-align:center;
+  padding:10px 8px 3px;
+  color:rgba(255,248,243,.62);
+  font-size:12px;
+}
+
+.cta{
+  padding:20px;
+  margin-bottom:12px;
+}
+
+.cta h2{
+  font-family:"Calibri Light",Calibri,Arial,sans-serif;
+  font-size:30px;
+  font-weight:300;
+  margin:0 0 8px;
+  color:#fff8f3;
+}
+
+.cta p{margin:0 0 14px}
+
+.fine{
+  text-align:center;
+  color:rgba(255,248,243,.50);
+  font-size:12px;
+  line-height:1.4;
+  padding:4px 10px 0;
+}
+
+/* SVG: единая орнаментальная графика */
+.vitokSpiral{
+  fill:none;
+  stroke:rgba(244,215,184,.075);
+  stroke-width:.9;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  filter:none;
+}
+.vitokSpiralSoft{
+  fill:none;
+  stroke:rgba(255,248,243,.045);
+  stroke-width:.7;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  stroke-dasharray:1 12;
+}
+.vitokSpark{fill:rgba(244,215,184,.22)}
+.star{fill:rgba(244,215,184,.54)}
+.bgVeil{
+  fill:none;
+  stroke:rgba(255,248,243,.038);
+  stroke-width:.8;
+  stroke-dasharray:1.5 12;
+  stroke-linecap:round;
+}
+.bgGlowCircle{
+  fill:rgba(255,248,243,.010);
+  stroke:rgba(244,215,184,.040);
+  stroke-width:.9;
+}
+.arc,.arc.soft,.sep,.pathLine,.destinyLine{
+  fill:none;
+  stroke:rgba(244,215,184,.33);
+  stroke-width:1;
+  stroke-dasharray:1.4 7.5;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  filter:none;
+}
+.arc.soft{stroke:rgba(178,171,236,.30)}
+.pathLine{stroke:rgba(244,215,184,.24)}
+.destinyLine{stroke:rgba(248,107,125,.44);stroke-width:1.05}
+
+.num,.dateDigit,.dateDot{
+  font-family:Calibri,Arial,sans-serif;
+  font-variant-numeric:tabular-nums lining-nums;
+  font-feature-settings:"tnum" 1,"lnum" 1;
+  font-size:22px;
+  text-anchor:middle;
+  dominant-baseline:middle;
+  font-weight:700;
+  fill:#fff8f3;
+  text-shadow:0 0 12px rgba(37,38,43,.62),0 2px 8px rgba(37,38,43,.50);
+}
+.num.small{font-size:20px}
+.dateDigit,.dateDot{fill:#f4d7b8}
+
+.portraitHalo,.cycleCircle,.destinyCircle{
+  fill:rgba(255,248,243,.035);
+  stroke:rgba(244,215,184,.24);
+  stroke-width:1.25;
+}
+.destinyCircle{
+  fill:rgba(248,107,125,.065);
+  stroke:rgba(248,107,125,.52);
+  filter:drop-shadow(0 0 10px rgba(248,107,125,.14));
+}
+.destinyHalo{
+  fill:rgba(248,107,125,.035);
+  stroke:rgba(248,107,125,.12);
+  stroke-width:1;
+}
+.dateChip{
+  fill:rgba(255,248,243,.035);
+  stroke:rgba(244,215,184,.22);
+  stroke-width:1.05;
+  filter:none;
+}
+.ageText{
+  font-family:Calibri,Arial,sans-serif;
+  font-size:13px;
+  text-anchor:middle;
+  dominant-baseline:middle;
+  fill:rgba(255,248,243,.58);
+  font-weight:700;
+}
+.challengeSquare{
+  fill:rgba(255,248,243,.028);
+  stroke:rgba(178,171,236,.30);
+  stroke-width:1.25;
+  rx:10;
+}
+
+@media(max-width:430px){
+  body{padding:12px 8px 28px}
+  .page{width:100%}
+  .hero{padding:24px 16px 18px}
+  h1{font-size:44px}
+  .chartShell{padding:6px}
+  .chartCard{border-radius:26px}
+  svg{height:740px}
+}
+@media(max-width:390px){
+  h1{font-size:40px}
+  .grid{grid-template-columns:1fr}
+  svg{height:700px}
+}
 </style></head><body>
 <div class="page">
 <section class="hero"><p class="eyebrow">личная карта пути</p><h1>Метод Витка</h1><p class="lead">Введи дату рождения, чтобы построить карту личности, линии пути, циклов, вызовов и предназначения.</p><div class="controls"><input type="date" id="birth"/><button id="btn">Построить карту</button></div></section>
 <section class="info"><details open><summary>Что показывает карта</summary><div class="grid"><div class="item"><b>Портрет личности</b><span>6 арканов внутренней структуры и проявления.</span></div><div class="item"><b>Линия пути</b><span>Последовательность движения по дате рождения.</span></div><div class="item"><b>Циклы и вызовы</b><span>Этапы взросления, повторы и точки роста.</span></div><div class="item"><b>Предназначение</b><span>Верхняя линия: то, что больше личности и раскрывается через неё.</span></div></div></details></section>
-<section class="chartShell" id="chartSection"><div class="chartTop"><button class="secondary" id="focusBtn" type="button">Только карта</button><button class="secondary" id="resetBtn" type="button">Новая дата</button></div><div class="chartCard"><svg viewBox="245 24 490 590" id="svg"></svg></div><div class="hint">Для сохранения зажми экран и сделай скриншот карты</div></section>
+<section class="chartShell" id="chartSection"><div class="chartCard"><svg viewBox="245 24 490 590" id="svg"></svg></div><div class="hint">Для сохранения зажми экран и сделай скриншот карты</div></section>
 <section class="cta"><h2>Хочешь расшифровку?</h2><p>Карта показывает структуру. Глубинный смысл раскрывается в том, как ты пройдешь свой путь.</p><a class="linkButton" href="https://t.me/mrnmkkn" class="cta-btn" target="_blank">Написать Марине</a></section><p class="fine">Метод Витка · карта по дате рождения</p>
 </div>
 <script>
@@ -212,6 +536,5 @@ const originalRender = render;
 render = function(){ originalRender(); const iso = document.getElementById('birth').value; if(iso) document.getElementById('chartSection').scrollIntoView({behavior:'smooth', block:'start'}); };
 document.getElementById('btn').onclick = render;
 document.getElementById('birth').onchange = render;
-document.getElementById('focusBtn').addEventListener('click',()=>{document.body.classList.toggle('focus');document.getElementById('focusBtn').textContent=document.body.classList.contains('focus')?'Показать всё':'Только карта';document.getElementById('chartSection').scrollIntoView({behavior:'smooth',block:'start'});});
-document.getElementById('resetBtn').addEventListener('click',()=>{document.body.classList.remove('focus');document.getElementById('focusBtn').textContent='Только карта';window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>document.getElementById('birth').focus(),400);});
+
 </script></body></html>
