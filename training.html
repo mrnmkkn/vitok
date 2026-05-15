@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Обучение методу витка — 7 шагов к мастерству</title>
+  <meta name="description" content="Обучение методу витка: 7 модулей, небольшая группа, практика, разборы после каждого модуля. Старт 25 мая, стоимость 150 долларов."/>
+  <style>
+    :root{
+      --dark:#090b1d;
+      --deep:#121634;
+      --violet:#8e5cd8;
+      --pink:#f38ac6;
+      --gold:#f2d1b1;
+      --ink:#fff8f3;
+      --muted:rgba(255,248,243,.78);
+      --soft:rgba(255,248,243,.13);
+      --line:rgba(255,240,225,.18);
+      --card:rgba(255,255,255,.055);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;background:#050611}
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--ink);
+      font-family:"Calibri Light", Calibri, Arial, sans-serif;
+      background:
+        radial-gradient(circle at 18% 8%, rgba(243,138,198,.22) 0 12%, transparent 30%),
+        radial-gradient(circle at 84% 12%, rgba(142,92,216,.20) 0 11%, transparent 33%),
+        radial-gradient(circle at 50% 56%, rgba(83,104,214,.13) 0 20%, transparent 52%),
+        radial-gradient(circle at 100% 82%, rgba(243,138,198,.24) 0 10%, transparent 30%),
+        linear-gradient(180deg,#040613 0%,#090c24 44%,#070918 100%);
+      padding:20px 12px 36px;
+      position:relative;
+      overflow-x:hidden;
+    }
+    body:before,
+    body:after{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+    }
+    body:before{
+      background:
+        radial-gradient(circle, rgba(255,240,225,.55) 0 1px, transparent 1.7px),
+        radial-gradient(circle, rgba(243,138,198,.4) 0 .8px, transparent 1.5px);
+      background-size:110px 110px, 76px 76px;
+      background-position:12px 10px, 48px 56px;
+      opacity:.18;
+      mask-image:linear-gradient(180deg,black 0%,black 82%,transparent 100%);
+    }
+    body:after{
+      background:
+        radial-gradient(circle at 0% 20%, rgba(243,138,198,.3), transparent 28%),
+        radial-gradient(circle at 100% 70%, rgba(142,92,216,.28), transparent 26%);
+      filter:blur(36px);
+      opacity:.6;
+    }
+    .page{width:min(100%,820px);margin:0 auto;position:relative;z-index:1}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+    .crumb,.topLink,.ctaButton,.ghostButton{
+      display:inline-flex;align-items:center;justify-content:center;
+      text-decoration:none;border-radius:999px;min-height:46px;padding:12px 18px;
+      font-family:Calibri,Arial,sans-serif;font-size:15px;font-weight:700;
+      transition:filter .2s ease, background .2s ease;
+    }
+    .crumb,.topLink,.ghostButton{
+      color:var(--ink);
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,248,243,.14);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.1);
+    }
+    .ctaButton{
+      color:#fff8f3;
+      background:linear-gradient(135deg, rgba(243,138,198,.95), rgba(199,132,255,.78) 55%, rgba(255,214,178,.55));
+      box-shadow:0 18px 40px rgba(243,138,198,.24), inset 0 1px 0 rgba(255,255,255,.24);
+      border:1px solid rgba(255,248,243,.16);
+    }
+    .crumb:hover,.topLink:hover,.ctaButton:hover,.ghostButton:hover{filter:brightness(1.06)}
+    .hero,.section,.panel,.finalCard{
+      position:relative;
+      overflow:hidden;
+      border-radius:34px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.12), rgba(255,255,255,.04) 48%, rgba(142,92,216,.05)),
+        rgba(255,255,255,.03);
+      border:1px solid rgba(255,248,243,.18);
+      backdrop-filter:blur(18px) saturate(1.14);
+      -webkit-backdrop-filter:blur(18px) saturate(1.14);
+      box-shadow:0 24px 70px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.13), inset 0 0 40px rgba(243,138,198,.05);
+    }
+    .hero:before,.section:before,.finalCard:before,.panel:before{
+      content:"";
+      position:absolute;
+      inset:1px;
+      border-radius:33px;
+      background:linear-gradient(135deg, rgba(255,255,255,.14), transparent 34%, rgba(243,138,198,.06) 72%, transparent);
+      opacity:.55;
+      pointer-events:none;
+    }
+    .hero{
+      padding:34px 24px 26px;
+      margin-bottom:14px;
+      text-align:center;
+    }
+    .eyebrow{
+      margin:0 0 12px;
+      color:rgba(242,209,177,.9);
+      font-family:Calibri,Arial,sans-serif;
+      font-size:11px;
+      letter-spacing:.32em;
+      text-transform:uppercase;
+      font-weight:700;
+    }
+    h1,h2,h3{margin:0;color:#fff7ef}
+    .heroTitle,.sectionTitle,.finalTitle{
+      font-family:Georgia, "Times New Roman", serif;
+      font-weight:400;
+      line-height:.95;
+      letter-spacing:.03em;
+      text-transform:uppercase;
+      color:#f4dac1;
+      text-shadow:0 12px 34px rgba(243,138,198,.16);
+    }
+    .heroTitle{font-size:62px;margin-bottom:12px}
+    .heroSub{font-size:22px;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,248,243,.9);margin:0 0 20px}
+    .lead{max-width:660px;margin:0 auto 20px;color:var(--muted);font-size:19px;line-height:1.45}
+    .heroMeta{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:22px}
+    .heroMeta span{
+      display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:9px 14px;
+      border-radius:999px;border:1px solid rgba(255,248,243,.16);background:rgba(255,255,255,.05);font-size:14px;color:#fff8f3;
+    }
+    .heroButtons{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+    .section{padding:22px;margin-bottom:14px}
+    .sectionHeader{text-align:center;margin-bottom:18px}
+    .sectionTitle{font-size:46px;margin-bottom:10px}
+    .sectionText{max-width:700px;margin:0 auto;color:var(--muted);font-size:18px;line-height:1.48}
+    .moduleList{display:grid;gap:12px}
+    .moduleCard{
+      display:grid;grid-template-columns:90px 1fr;gap:16px;align-items:center;
+      padding:18px;border-radius:28px;background:rgba(8,10,28,.45);
+      border:1px solid var(--line);position:relative;overflow:hidden;
+    }
+    .moduleCard:after{
+      content:"";position:absolute;right:-40px;bottom:-44px;width:150px;height:150px;border-radius:50%;
+      background:radial-gradient(circle, rgba(243,138,198,.15), transparent 60%);
+      pointer-events:none;
+    }
+    .moduleNo{
+      width:72px;height:72px;border-radius:22px;display:flex;align-items:center;justify-content:center;
+      font-family:Calibri,Arial,sans-serif;font-size:34px;font-weight:700;color:#fff7ef;
+      border:1px solid rgba(255,248,243,.16);background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 0 20px rgba(243,138,198,.08);
+    }
+    .moduleCard h3{font-family:Calibri,Arial,sans-serif;font-size:17px;letter-spacing:.1em;text-transform:uppercase;color:rgba(242,209,177,.92);margin-bottom:6px}
+    .moduleCard b{display:block;font-size:34px;line-height:1.02;font-weight:700;color:#fff8f3;margin-bottom:8px}
+    .moduleCard p{margin:0;color:var(--muted);font-size:16px;line-height:1.4}
+    .twoCols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .panel{padding:20px;height:100%}
+    .panelTitle{font-family:Georgia, "Times New Roman", serif;font-size:28px;letter-spacing:.04em;color:#f4dac1;text-align:center;margin-bottom:14px}
+    .featureList,.stepsList,.pointsList{display:grid;gap:12px}
+    .featureItem,.stepItem,.pointItem{
+      padding:15px 16px;border-radius:22px;background:rgba(255,255,255,.04);border:1px solid rgba(255,248,243,.1);
+    }
+    .featureItem b,.stepItem b,.pointItem b{display:block;font-size:17px;color:#fff8f3;margin-bottom:6px}
+    .featureItem span,.stepItem span,.pointItem span{display:block;font-size:16px;line-height:1.45;color:var(--muted)}
+    .notFitList{display:grid;gap:12px;margin-top:14px}
+    .notFitList div{padding-left:20px;position:relative;color:var(--muted);font-size:18px;line-height:1.48}
+    .notFitList div:before{content:"✦";position:absolute;left:0;top:0;color:#f4dac1}
+    .quoteBand{
+      margin-top:16px;padding:20px;border-radius:28px;border:1px solid rgba(255,248,243,.15);background:rgba(255,255,255,.045);
+      text-align:center;font-family:Georgia, "Times New Roman", serif;font-size:26px;line-height:1.25;color:#f4dac1;
+    }
+    .formatGrid{display:grid;gap:12px}
+    .stepItem{display:grid;grid-template-columns:60px 1fr;gap:14px;align-items:center}
+    .stepNo{
+      width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;
+      font-size:24px;font-weight:700;color:#fff8f3;border:1px solid rgba(255,248,243,.16);background:rgba(255,255,255,.05);
+    }
+    .finalCard{padding:28px 22px;text-align:center;margin-bottom:8px}
+    .finalTitle{font-size:44px;margin-bottom:12px}
+    .finalText{max-width:680px;margin:0 auto 18px;color:var(--muted);font-size:19px;line-height:1.45}
+    .priceLine{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:20px}
+    .priceLine span{
+      display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:10px 16px;border-radius:999px;
+      border:1px solid rgba(255,248,243,.16);background:rgba(255,255,255,.05);font-size:16px;color:#fff8f3;
+    }
+    .footerNote{text-align:center;color:rgba(255,248,243,.55);font-size:12px;line-height:1.4;padding:4px 10px 0}
+    @media (max-width:700px){
+      .heroTitle{font-size:48px}
+      .sectionTitle,.finalTitle{font-size:36px}
+      .moduleCard b{font-size:28px}
+      .twoCols{grid-template-columns:1fr}
+    }
+    @media (max-width:520px){
+      body{padding:12px 8px 28px}
+      .page{width:100%}
+      .topbar{flex-direction:column;align-items:stretch}
+      .hero{padding:28px 16px 20px}
+      .heroTitle{font-size:40px}
+      .heroSub{font-size:16px;letter-spacing:.18em}
+      .lead,.sectionText,.notFitList div,.finalText{font-size:17px}
+      .section{padding:18px}
+      .sectionTitle,.finalTitle{font-size:30px}
+      .moduleCard{grid-template-columns:1fr;gap:12px;text-align:left}
+      .moduleCard b{font-size:24px}
+      .moduleNo{width:64px;height:64px;font-size:30px}
+      .stepItem{grid-template-columns:52px 1fr}
+      .quoteBand{font-size:22px}
+      .heroButtons .ctaButton,.heroButtons .ghostButton,.ctaButton,.ghostButton,.crumb,.topLink{width:100%}
+    }
+    @supports (padding:max(0px)) {
+      body{padding-top:max(12px, env(safe-area-inset-top));padding-bottom:max(28px, env(safe-area-inset-bottom));}
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <a class="crumb" href="index.html">← К калькулятору</a>
+      <a class="topLink" href="https://t.me/mrnmkkn" target="_blank" rel="noopener">Задать вопрос</a>
+    </div>
+
+    <section class="hero">
+      <p class="eyebrow">обучение методу витка</p>
+      <h1 class="heroTitle">Модули обучения</h1>
+      <p class="heroSub">7 шагов к мастерству</p>
+      <p class="lead">Обучение для тех, кто хочет видеть не просто отдельные ответы, а живую логику пути. Небольшая группа, живая практика, задания в чате и разборы после каждого модуля.</p>
+      <div class="heroMeta">
+        <span>Старт обучения — 25 мая</span>
+        <span>Стоимость — 150 долларов</span>
+        <span>Небольшая группа</span>
+        <span>Теория + практика</span>
+      </div>
+      <div class="heroButtons">
+        <a class="ctaButton" href="https://t.me/mrnmkkn" target="_blank" rel="noopener">Записаться на обучение</a>
+        <a class="ghostButton" href="index.html">Сначала построить карту</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="sectionHeader">
+        <h2 class="sectionTitle">Модули обучения</h2>
+        <p class="sectionText">Собираем метод шаг за шагом: от философии и логики до целостного чтения карты и выстраивания плана действий по ней.</p>
+      </div>
+      <div class="moduleList">
+        <article class="moduleCard"><div class="moduleNo">01</div><div><h3>Модуль 1</h3><b>Философия и логика метода</b><p>Почему именно метод витка? На чём он основан и почему карта читается как живая система, а не набор случайных значений.</p></div></article>
+        <article class="moduleCard"><div class="moduleNo">02</div><div><h3>Модуль 2</h3><b>Архитектура метода</b><p>Что включает в себя архитектура метода? Как считать, как связаны элементы карты и как не терять логику всей конструкции.</p></div></article>
+        <article class="moduleCard"><div class="moduleNo">03</div><div><h3>Модуль 3</h3><b>Портрет личности</b><p>Как расшифровать портрет личности, увидеть внутреннюю структуру человека и понять, что с этим делать в практике.</p></div></article>
+        <article class="moduleCard"><div class="moduleNo">04</div><div><h3>Модуль 4</h3><b>Линия пути</b><p>Сценарий жизни: что, где, когда и как. Учимся видеть последовательность движения человека по своей линии пути.</p></div></article>
+        <article class="moduleCard"><div class="moduleNo">05</div><div><h3>Модуль 5</h3><b>Линия предназначения</b><p>Для чего всё это? Как читать вертикаль предназначения и видеть, куда человека зовёт его путь.</p></div></article>
+        <article class="moduleCard"><div class="moduleNo">06</div><div><h3>Модуль 6</h3><b>Жизненные этапы</b><p>Этапы, вызовы, трансформации и основные темы периодов. Учимся видеть, через что человек проходит сейчас.</p></div></article>
+        <article class="moduleCard"><div class="moduleNo">07</div><div><h3>Модуль 7</h3><b>Сборка карты</b><p>Собираем всё в целостную картину и выстраиваем план действий по карте метода витка.</p></div></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="sectionHeader">
+        <h2 class="sectionTitle">Для кого это обучение</h2>
+        <p class="sectionText">Для тех, кто хочет однажды посмотреть на карту человека и увидеть в ней не просто набор качеств, а логику жизни.</p>
+      </div>
+      <div class="pointsList">
+        <div class="pointItem"><b>Не просто “характер”</b><span>а его внутреннюю структуру.</span></div>
+        <div class="pointItem"><b>Не просто “проблему”</b><span>а этап, через который человек проходит.</span></div>
+        <div class="pointItem"><b>Не просто “ошибку”</b><span>а повторяющийся сценарий.</span></div>
+        <div class="pointItem"><b>Не просто “предназначение”</b><span>а путь, который уже давно зовёт его к себе.</span></div>
+      </div>
+      <div class="quoteBand">Метод витка учит видеть не отдельные ответы, а живую логику пути.</div>
+    </section>
+
+    <section class="section">
+      <div class="twoCols">
+        <div class="panel">
+          <h2 class="panelTitle">Это обучение не подойдёт, если</h2>
+          <div class="notFitList">
+            <div>хочется просто получить готовые расшифровки и быстро повторять их по шаблону.</div>
+            <div>хочется “магических ответов” без анализа, наблюдения и честного взгляда на путь человека.</div>
+          </div>
+        </div>
+        <div class="panel">
+          <h2 class="panelTitle">Но если тебе важно</h2>
+          <div class="featureList">
+            <div class="featureItem"><b>Понимать глубину</b><span>а не довольствоваться поверхностными трактовками.</span></div>
+            <div class="featureItem"><b>Видеть связи</b><span>между числами, арканами, этапами и проявлениями человека.</span></div>
+            <div class="featureItem"><b>Чувствовать логику карты</b><span>и постепенно собирать собственное мастерство.</span></div>
+          </div>
+          <div class="quoteBand">Тогда тебе сюда.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="sectionHeader">
+        <h2 class="sectionTitle">Как будет проходить обучение</h2>
+        <p class="sectionText">Небольшая группа, живая практика и разборы после каждого модуля, чтобы метод стал не просто знанием, а живым навыком видеть.</p>
+      </div>
+      <div class="formatGrid">
+        <div class="stepItem"><div class="stepNo">1</div><div><b>Небольшая группа</b><span>Достаточно пространства для включённости, вопросов и живого контакта.</span></div></div>
+        <div class="stepItem"><div class="stepNo">2</div><div><b>Каждый модуль</b><span>Теория + практика, чтобы сразу превращать понимание в навык.</span></div></div>
+        <div class="stepItem"><div class="stepNo">3</div><div><b>В чате</b><span>Задания, обсуждение и ответы на вопросы по ходу обучения.</span></div></div>
+        <div class="stepItem"><div class="stepNo">4</div><div><b>После каждого модуля</b><span>Вебинар для разбора, закрепления материала и ответов на вопросы.</span></div></div>
+      </div>
+      <div class="quoteBand">Будем разбирать друг друга, твоего бывшего, начальника и соседа.</div>
+    </section>
+
+    <section class="finalCard">
+      <p class="eyebrow">старт потока</p>
+      <h2 class="finalTitle">Обучение стартует 25 мая</h2>
+      <p class="finalText">Если чувствуешь, что хочешь глубже понимать карту человека, видеть связи и собирать собственное мастерство — присоединяйся. Это обучение про систему, глубину и живую практику.</p>
+      <div class="priceLine">
+        <span>Старт: 25 мая</span>
+        <span>Стоимость: 150 долларов</span>
+      </div>
+      <div class="heroButtons">
+        <a class="ctaButton" href="https://t.me/mrnmkkn" target="_blank" rel="noopener">Хочу на обучение</a>
+        <a class="ghostButton" href="index.html">Вернуться к калькулятору</a>
+      </div>
+    </section>
+
+    <p class="footerNote">Метод Витка · обучение по авторскому методу</p>
+  </div>
+</body>
+</html>
