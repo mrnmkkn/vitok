@@ -124,7 +124,7 @@
       color:#f4dac1;
       text-shadow:0 12px 34px rgba(243,138,198,.16);
     }
-    .heroTitle{font-size:40px;margin-bottom:12px}
+    .heroTitle{font-size:62px;margin-bottom:12px}
     .heroSub{font-size:22px;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,248,243,.9);margin:0 0 20px}
     .lead{max-width:660px;margin:0 auto 20px;color:var(--muted);font-size:19px;line-height:1.45}
     .heroMeta{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:22px}
@@ -214,6 +214,199 @@
     @supports (padding:max(0px)) {
       body{padding-top:max(12px, env(safe-area-inset-top));padding-bottom:max(28px, env(safe-area-inset-bottom));}
     }
+  
+    /* === Mobile refined typography override === */
+    .page{
+      width:min(100%,480px);
+    }
+    body{
+      padding:12px 8px 28px;
+    }
+    .topbar{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:8px;
+      margin-bottom:10px;
+    }
+    .crumb,.topLink,.ctaButton,.ghostButton{
+      min-height:44px;
+      padding:11px 15px;
+      font-size:14px;
+      font-weight:400;
+      width:100%;
+    }
+    .hero,.section,.panel,.finalCard{
+      border-radius:28px;
+    }
+    .hero:before,.section:before,.finalCard:before,.panel:before{
+      border-radius:27px;
+    }
+    .hero{
+      padding:24px 16px 18px;
+      margin-bottom:12px;
+    }
+    .section{
+      padding:16px;
+      margin-bottom:12px;
+    }
+    .panel{
+      padding:16px;
+    }
+    .finalCard{
+      padding:22px 16px 18px;
+    }
+    .eyebrow{
+      margin-bottom:10px;
+      font-size:10px;
+      letter-spacing:.22em;
+      font-weight:400;
+    }
+    .heroTitle,.sectionTitle,.finalTitle{
+      font-weight:300;
+      line-height:1.06;
+      letter-spacing:.045em;
+      text-shadow:0 10px 26px rgba(243,138,198,.14);
+    }
+    .heroTitle{
+      font-size:34px;
+      margin-bottom:10px;
+    }
+    .heroSub{
+      font-size:14px;
+      letter-spacing:.18em;
+      font-weight:300;
+      margin:0 0 14px;
+    }
+    .lead{
+      font-size:16px;
+      line-height:1.46;
+      margin-bottom:16px;
+    }
+    .heroMeta{
+      gap:7px;
+      margin-bottom:16px;
+    }
+    .heroMeta span,.priceLine span{
+      min-height:32px;
+      padding:8px 11px;
+      font-size:13px;
+      font-weight:300;
+    }
+    .heroButtons{
+      gap:8px;
+    }
+    .sectionHeader{
+      margin-bottom:14px;
+    }
+    .sectionTitle,.finalTitle{
+      font-size:27px;
+      margin-bottom:8px;
+    }
+    .sectionText,.finalText{
+      font-size:15.5px;
+      line-height:1.46;
+    }
+    .moduleList,.featureList,.stepsList,.pointsList,.formatGrid,.notFitList{
+      gap:9px;
+    }
+    .moduleCard{
+      grid-template-columns:54px 1fr;
+      gap:12px;
+      padding:13px;
+      border-radius:23px;
+      align-items:start;
+    }
+    .moduleNo{
+      width:50px;
+      height:50px;
+      border-radius:17px;
+      font-size:23px;
+      font-weight:300;
+    }
+    .moduleCard h3{
+      font-size:12px;
+      letter-spacing:.11em;
+      font-weight:400;
+      margin-bottom:4px;
+    }
+    .moduleCard b{
+      font-size:20px;
+      line-height:1.12;
+      font-weight:400;
+      margin-bottom:6px;
+    }
+    .moduleCard p{
+      font-size:14px;
+      line-height:1.42;
+    }
+    .twoCols{
+      grid-template-columns:1fr;
+      gap:12px;
+    }
+    .panelTitle{
+      font-size:23px;
+      line-height:1.16;
+      font-weight:300;
+      margin-bottom:12px;
+    }
+    .featureItem,.stepItem,.pointItem{
+      padding:13px 14px;
+      border-radius:20px;
+    }
+    .featureItem b,.stepItem b,.pointItem b{
+      font-size:15.5px;
+      font-weight:400;
+      margin-bottom:4px;
+    }
+    .featureItem span,.stepItem span,.pointItem span{
+      font-size:14.5px;
+      line-height:1.44;
+    }
+    .notFitList div{
+      font-size:15.5px;
+      line-height:1.46;
+    }
+    .quoteBand{
+      margin-top:12px;
+      padding:15px 14px;
+      border-radius:23px;
+      font-size:21px;
+      line-height:1.25;
+      font-weight:300;
+    }
+    .stepItem{
+      grid-template-columns:46px 1fr;
+      gap:11px;
+      align-items:start;
+    }
+    .stepNo{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      font-size:20px;
+      font-weight:300;
+    }
+    .priceLine{
+      gap:7px;
+      margin-bottom:16px;
+    }
+    .footerNote{
+      font-size:11px;
+      padding-top:2px;
+    }
+    @media (min-width:521px){
+      .page{width:480px}
+      .topbar{grid-template-columns:1fr 1fr}
+      .heroTitle{font-size:36px}
+      .sectionTitle,.finalTitle{font-size:29px}
+    }
+    @media (max-width:380px){
+      .heroTitle{font-size:31px}
+      .sectionTitle,.finalTitle{font-size:25px}
+      .moduleCard b{font-size:18px}
+      .lead,.sectionText,.finalText{font-size:15px}
+    }
+
   </style>
 </head>
 <body>
@@ -224,13 +417,13 @@
     </div>
 
     <section class="hero">
-      <p class="eyebrow">обучение нумерологии</p>
-      <h1 class="heroTitle">Метод Витка</h1>
+      <p class="eyebrow">обучение методу витка</p>
+      <h1 class="heroTitle">Модули обучения</h1>
       <p class="heroSub">7 шагов к мастерству</p>
       <p class="lead">Обучение для тех, кто хочет видеть не просто отдельные ответы, а живую логику пути. Небольшая группа, живая практика, задания в чате и разборы после каждого модуля.</p>
       <div class="heroMeta">
         <span>Старт обучения — 25 мая</span>
-        <span>Стоимость — 15.000 руб.</span>
+        <span>Стоимость — 150 долларов</span>
         <span>Небольшая группа</span>
         <span>Теория + практика</span>
       </div>
@@ -311,7 +504,7 @@
       <p class="finalText">Если чувствуешь, что хочешь глубже понимать карту человека, видеть связи и собирать собственное мастерство — присоединяйся. Это обучение про систему, глубину и живую практику.</p>
       <div class="priceLine">
         <span>Старт: 25 мая</span>
-        <span>Стоимость: 15.000 руб.</span>
+        <span>Стоимость: 150 долларов</span>
       </div>
       <div class="heroButtons">
         <a class="ctaButton" href="https://t.me/mrnmkkn" target="_blank" rel="noopener">Хочу на обучение</a>
