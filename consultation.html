@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Персональная встреча по Методу Витка — Марина Миккина</title>
+  <meta name="description" content="Персональная встреча по Методу Витка: разбор внутренней структуры личности и актуальной жизненной ситуации через чувства, действия и глубинные потребности."/>
+  <meta name="robots" content="index, follow, max-image-preview:large"/>
+  <style>
+    :root{
+      --dark:#25262b;
+      --raspberry:#e92b69;
+      --coral:#f86b7d;
+      --cream:#f4d7b8;
+      --lavender:#b2abec;
+      --violet:#9656ce;
+      --ink:#fff8f3;
+      --muted:rgba(255,248,243,.74);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;background:#000}
+    body{
+      margin:0;
+      min-height:100vh;
+      color:var(--ink);
+      font-family:"Calibri Light",Calibri,Arial,sans-serif;
+      background:
+        radial-gradient(circle at 18% 6%, rgba(233,43,105,.46) 0 8%, transparent 28%),
+        radial-gradient(circle at 84% 12%, rgba(178,171,236,.40) 0 10%, transparent 32%),
+        radial-gradient(circle at 50% 48%, rgba(248,107,125,.18) 0 18%, transparent 56%),
+        radial-gradient(circle at 20% 88%, rgba(150,86,206,.35) 0 12%, transparent 40%),
+        linear-gradient(145deg,#25262b 0%,#302c3d 44%,#4e315f 100%);
+      padding:18px 12px 36px;
+    }
+    body:before{
+      content:"";position:fixed;inset:0;pointer-events:none;
+      background:radial-gradient(circle at 50% -10%,rgba(244,215,184,.18),transparent 32%),linear-gradient(180deg,rgba(255,255,255,.04),transparent 26%,rgba(0,0,0,.10));
+      mix-blend-mode:screen;opacity:.72;
+    }
+    .page{width:min(100%,480px);margin:0 auto;position:relative;z-index:1}
+    .card{
+      position:relative;overflow:hidden;border-radius:30px;padding:22px 20px;margin-bottom:14px;
+      background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.045) 48%,rgba(178,171,236,.055)),rgba(255,255,255,.035);
+      backdrop-filter:blur(18px) saturate(1.15);-webkit-backdrop-filter:blur(18px) saturate(1.15);
+      border:1px solid rgba(255,248,243,.18);
+      box-shadow:0 24px 70px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.16),inset 0 -1px 0 rgba(178,171,236,.08);
+    }
+    .card:before{content:"";position:absolute;inset:1px;border-radius:29px;pointer-events:none;background:linear-gradient(135deg,rgba(255,255,255,.16),transparent 34%,rgba(178,171,236,.07) 78%,transparent);opacity:.52}
+    .card>*{position:relative}
+    .hero{padding:28px 20px 24px}
+    .eyebrow{margin:0 0 12px;color:rgba(244,215,184,.86);font-family:Calibri,Arial,sans-serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;font-weight:700}
+    h1{margin:0 0 14px;font-size:43px;font-weight:300;line-height:.98;letter-spacing:.005em;color:#fff8f3;text-shadow:0 14px 40px rgba(233,43,105,.22)}
+    h2{margin:0 0 10px;font-size:29px;font-weight:300;line-height:1.08;color:#fff8f3}
+    h3{margin:18px 0 7px;font-family:Calibri,Arial,sans-serif;font-size:16px;color:#fff8f3}
+    p{margin:0 0 12px;color:var(--muted);font-size:15px;line-height:1.52}
+    p:last-child{margin-bottom:0}
+    .lead{font-size:17px;line-height:1.48}
+    .accent{color:#fff8f3;font-size:19px;line-height:1.42}
+    .list{display:grid;gap:9px;margin-top:14px}
+    .list div{padding:13px 14px;border-radius:20px;background:rgba(255,255,255,.045);border:1px solid rgba(255,248,243,.11);color:var(--muted);font-size:14px;line-height:1.42}
+    .list b{color:#fff8f3}
+    .steps{counter-reset:step;display:grid;gap:10px;margin-top:14px}
+    .step{position:relative;padding:14px 14px 14px 50px;border-radius:20px;background:rgba(255,255,255,.045);border:1px solid rgba(255,248,243,.11);color:var(--muted);font-size:14px;line-height:1.42}
+    .step:before{counter-increment:step;content:counter(step);position:absolute;left:14px;top:14px;width:25px;height:25px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(233,43,105,.96),rgba(150,86,206,.84));color:#fff;font-family:Calibri,Arial,sans-serif;font-size:13px;font-weight:700}
+    .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+    .meta span{display:inline-flex;align-items:center;min-height:34px;padding:8px 12px;border-radius:999px;border:1px solid rgba(255,248,243,.14);background:rgba(255,255,255,.05);color:#fff8f3;font-size:13px;line-height:1.25}
+    .linkButton{display:inline-flex;align-items:center;justify-content:center;width:100%;min-height:54px;border:none;border-radius:20px;padding:14px 18px;font-family:Calibri,Arial,sans-serif;font-size:17px;font-weight:700;text-decoration:none;cursor:pointer;color:#fff8f3;background:linear-gradient(135deg,rgba(233,43,105,.96),rgba(248,107,125,.88) 48%,rgba(150,86,206,.84));box-shadow:0 18px 42px rgba(233,43,105,.25),inset 0 1px 0 rgba(255,255,255,.26)}
+    .linkButton:hover{filter:brightness(1.04)}
+    .back{display:inline-flex;margin:2px 0 14px;color:rgba(255,248,243,.66);font-family:Calibri,Arial,sans-serif;font-size:14px;text-decoration:none}
+    .note{font-size:13px;color:rgba(255,248,243,.56);text-align:center;padding:2px 10px 0;line-height:1.45}
+    @media(max-width:430px){body{padding:12px 8px 28px}.page{width:100%}.hero{padding:24px 16px 20px}h1{font-size:39px}.card{padding-left:16px;padding-right:16px}}
+    @supports (padding:max(0px)){body{padding-top:max(12px,env(safe-area-inset-top));padding-bottom:max(28px,env(safe-area-inset-bottom))}}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <a class="back" href="index.html">← Вернуться к калькулятору</a>
+
+    <section class="card hero">
+      <p class="eyebrow">персональная встреча</p>
+      <h1>Не просто узнать себя. Начать себя замечать.</h1>
+      <p class="lead">На встрече мы не будем разбирать твою карту отдельно от жизни. Возьмём то, что волнует тебя сейчас, и увидим, как в этой ситуации проявляются твои чувства, привычные действия и глубинные потребности.</p>
+      <div class="meta"><span>Индивидуально</span><span>Онлайн</span><span>По дате рождения</span></div>
+    </section>
+
+    <section class="card">
+      <p class="eyebrow">когда стоит прийти</p>
+      <h2>Понимаешь, что что-то не так, но не получается услышать себя</h2>
+      <div class="list">
+        <div>Стоишь перед выбором и не понимаешь, <b>чего действительно хочешь</b>.</div>
+        <div>Снова оказываешься в похожей ситуации в отношениях, работе или деньгах.</div>
+        <div>Знаешь, как «правильно», но внутри возникает сопротивление — и непонятно почему.</div>
+        <div>Чувствуешь, что прежняя жизнь больше не подходит, но пока не видишь следующий шаг.</div>
+        <div>Хочешь понять не только свои сильные стороны, но и <b>как опираться на них в реальной жизни</b>.</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <p class="eyebrow">что мы разберём</p>
+      <h2>Твою внутреннюю конструкцию — через живой запрос</h2>
+      <div class="steps">
+        <div class="step">Сформулируем ситуацию, в которой сейчас не хватает ясности.</div>
+        <div class="step">Посмотрим, что ты чувствуешь, как обычно действуешь и чего на самом деле хочешь.</div>
+        <div class="step">Увидим внутренние противоречия и автоматические сценарии, которые влияют на твои решения.</div>
+        <div class="step">Найдём точку опоры и конкретные ориентиры, которые помогут замечать себя в похожих ситуациях.</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <p class="eyebrow">результат</p>
+      <h2>После встречи останется не только расшифровка карты</h2>
+      <p class="accent">Ты начнёшь лучше понимать, что именно с тобой происходит и где в конкретной ситуации находится твой собственный выбор.</p>
+      <div class="list">
+        <div>Понимание своей базовой внутренней структуры.</div>
+        <div>Разбор одного актуального жизненного запроса.</div>
+        <div>Понимание связи между реакциями и числами карты.</div>
+        <div>Персональные вопросы и ориентиры для дальнейшего самонаблюдения.</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <p class="eyebrow">важно</p>
+      <h2>Это не предсказание и не готовое решение за тебя</h2>
+      <p>Метод Витка не говорит, как тебе правильно жить. Он помогает увидеть собственную природу, распознать привычную реакцию и вернуть себе возможность выбирать осознанно.</p>
+      <p>Карта становится не ярлыком, а языком, на котором проще разговаривать с собой.</p>
+    </section>
+
+    <section class="card">
+      <p class="eyebrow">запись</p>
+      <h2>Ты здесь, потому что уже хочешь разобраться</h2>
+      <p>С ситуацией, о которой слишком много думаешь. С решением, которое откладываешь. С желанием, которое сложно признать даже перед собой.</p>
+      <p>Можно продолжать искать объяснения. А можно наконец посмотреть, что происходит именно с тобой.</p>
+      <p class="accent"><b>Стоимость встречи — 11 000 ₽.</b><br>Сейчас доступно 5 мест.</p>
+      <a class="linkButton" href="#" aria-label="Записаться на встречу">Записаться на встречу</a>
+    </section>
+
+    <p class="note">Метод Витка · персональный разбор · самопознание · осознанный выбор</p>
+  </main>
+</body>
+</html>
