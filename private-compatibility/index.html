@@ -271,7 +271,7 @@
       </label>
       <div class="actions wide">
         <button class="primary" id="calculate" type="button">Рассчитать</button>
-        <button class="secondary" id="download" type="button" disabled>Скачать PNG</button>
+        <button class="secondary" id="download" type="button" disabled>Скачать JPG</button>
       </div>
     </section>
 
@@ -410,147 +410,84 @@
       elements.resultWrap.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
-    function roundRect(ctx, x, y, width, height, radius) {
-      const r = Math.min(radius, width / 2, height / 2);
-      ctx.beginPath();
-      ctx.roundRect(x, y, width, height, r);
-    }
-
-    function wrapLines(ctx, text, maxWidth) {
-      const words = text.split(/\s+/);
-      const lines = [];
-      let line = "";
-      for (const word of words) {
-        const test = line ? `${line} ${word}` : word;
-        if (ctx.measureText(test).width <= maxWidth || !line) line = test;
-        else { lines.push(line); line = word; }
-      }
-      if (line) lines.push(line);
-      return lines;
-    }
-
-    function drawTrackedText(ctx, text, x, y, spacing) {
-      let cursor = x;
-      for (const char of text) {
-        ctx.fillText(char, cursor, y);
-        cursor += ctx.measureText(char).width + spacing;
-      }
-    }
-
-    function drawLevel(ctx, y, label, arcana, item, color) {
-      const x = 72;
-      const width = 936;
-      const height = 248;
-      ctx.save();
-      const gradient = ctx.createLinearGradient(x, y, x + width, y + height);
-      gradient.addColorStop(0, `${color}20`);
-      gradient.addColorStop(1, "rgba(255,255,255,.015)");
-      ctx.fillStyle = gradient;
-      ctx.strokeStyle = color;
-      ctx.lineWidth = 2;
-      roundRect(ctx, x, y, width, height, 38);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = color;
-      roundRect(ctx, x, y, 12, height, 6);
-      ctx.fill();
-
-      ctx.fillStyle = "#b9afaa";
-      ctx.font = "24px Arial";
-      drawTrackedText(ctx, label.toUpperCase(), x + 42, y + 50, 4);
-
-      ctx.fillStyle = color;
-      ctx.font = "112px Georgia";
-      ctx.fillText(String(arcana), x + 42, y + 181);
-
-      ctx.fillStyle = "#f3ece8";
-      ctx.font = "48px Georgia";
-      const lines = wrapLines(ctx, item.title, 560).slice(0, 2);
-      const lineHeight = 52;
-      const titleY = y + 127 - ((lines.length - 1) * lineHeight) / 2;
-      lines.forEach((line, index) => ctx.fillText(line, x + 210, titleY + index * lineHeight));
-
-      ctx.fillStyle = color;
-      roundRect(ctx, x + width - 136, y + 73, 92, 92, 46);
-      ctx.fill();
-      ctx.fillStyle = "#171313";
-      ctx.font = "bold 40px Arial";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(scoreText(item.score), x + width - 90, y + 119);
-      ctx.restore();
-    }
-
-    function downloadPng() {
+    async function downloadJpg() {
       if (!currentResult) return;
-      const canvas = document.createElement("canvas");
-      canvas.width = 1080;
-      canvas.height = 1350;
-      const ctx = canvas.getContext("2d");
-      const { feelingsArcana, actionsArcana, feelings, actions, profile, caption } = currentResult;
-      const feelingsColor = COLORS[feelings.score];
-      const actionsColor = COLORS[actions.score];
 
-      const bg = ctx.createLinearGradient(0, 0, 0, 1350);
-      bg.addColorStop(0, "#241c1c");
-      bg.addColorStop(1, "#120f0f");
-      ctx.fillStyle = bg;
-      ctx.fillRect(0, 0, 1080, 1350);
+      const source = elements.card;
+      const clone = source.cloneNode(true);
+      clone.style.width = "440px";
+      clone.style.height = "550px";
+      clone.style.aspectRatio = "auto";
+      clone.style.boxShadow = "none";
 
-      const glow = ctx.createRadialGradient(170, 0, 10, 170, 0, 520);
-      glow.addColorStop(0, `${feelingsColor}22`);
-      glow.addColorStop(1, "rgba(0,0,0,0)");
-      ctx.fillStyle = glow;
-      ctx.fillRect(0, 0, 1080, 560);
+      const wrapper = document.createElementNS("http://www.w3.org/1999/xhtml", "div");
+      wrapper.style.width = "440px";
+      wrapper.style.height = "550px";
+      wrapper.appendChild(clone);
 
-      ctx.fillStyle = "#b9afaa";
-      ctx.font = "25px Arial";
-      drawTrackedText(ctx, "КАРТА ОТНОШЕНИЙ", 72, 82, 5);
+      const style = document.createElementNS("http://www.w3.org/1999/xhtml", "style");
+      style.textContent = Array.from(document.styleSheets)
+        .flatMap(sheet => {
+          try { return Array.from(sheet.cssRules, rule => rule.cssText); }
+          catch { return []; }
+        })
+        .join("\n");
+      wrapper.prepend(style);
 
-      let firstCardY = 118;
-      if (caption) {
-        ctx.fillStyle = "#f3ece8";
-        ctx.font = "54px Georgia";
-        const captionLines = wrapLines(ctx, caption, 930).slice(0, 2);
-        captionLines.forEach((line, index) => ctx.fillText(line, 72, 153 + index * 58));
-        firstCardY = 230 + Math.max(0, captionLines.length - 1) * 50;
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+      svg.setAttribute("width", "1080");
+      svg.setAttribute("height", "1350");
+      svg.setAttribute("viewBox", "0 0 440 550");
+
+      const foreignObject = document.createElementNS("http://www.w3.org/2000/svg", "foreignObject");
+      foreignObject.setAttribute("width", "440");
+      foreignObject.setAttribute("height", "550");
+      foreignObject.appendChild(wrapper);
+      svg.appendChild(foreignObject);
+
+      const blob = new Blob([new XMLSerializer().serializeToString(svg)], { type: "image/svg+xml;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+
+      try {
+        const image = new Image();
+        image.src = url;
+        await new Promise((resolve, reject) => {
+          image.onload = resolve;
+          image.onerror = () => reject(new Error("Не удалось подготовить изображение."));
+        });
+
+        const canvas = document.createElement("canvas");
+        canvas.width = 1080;
+        canvas.height = 1350;
+        const ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#120f0f";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+        const { feelingsArcana, actionsArcana, caption } = currentResult;
+        const safeName = caption
+          ? caption.toLowerCase().replace(/[^a-zа-яё0-9]+/gi, "-").replace(/^-|-$/g, "").slice(0, 50)
+          : `${feelingsArcana}-${actionsArcana}`;
+
+        canvas.toBlob(jpg => {
+          if (!jpg) return;
+          const link = document.createElement("a");
+          const jpgUrl = URL.createObjectURL(jpg);
+          link.download = `совместимость-${safeName || `${feelingsArcana}-${actionsArcana}`}.jpg`;
+          link.href = jpgUrl;
+          link.click();
+          setTimeout(() => URL.revokeObjectURL(jpgUrl), 1000);
+        }, "image/jpeg", .96);
+      } catch (error) {
+        elements.error.textContent = error.message || "Не удалось сохранить JPG.";
+      } finally {
+        URL.revokeObjectURL(url);
       }
-
-      drawLevel(ctx, firstCardY, "Уровень чувств", feelingsArcana, feelings, feelingsColor);
-      drawLevel(ctx, firstCardY + 276, "Уровень действий", actionsArcana, actions, actionsColor);
-
-      const profileY = firstCardY + 552;
-      ctx.strokeStyle = "rgba(243,236,232,.20)";
-      ctx.lineWidth = 2;
-      ctx.fillStyle = "rgba(255,255,255,.012)";
-      roundRect(ctx, 72, profileY, 936, 178, 38);
-      ctx.fill();
-      ctx.stroke();
-      ctx.fillStyle = "#b9afaa";
-      ctx.font = "24px Arial";
-      drawTrackedText(ctx, "ОБЩИЙ ПРОФИЛЬ", 112, profileY + 53, 4);
-      ctx.fillStyle = "#f3ece8";
-      ctx.font = "55px Georgia";
-      ctx.fillText(profile, 112, profileY + 127);
-
-      ctx.fillStyle = "#817875";
-      ctx.font = "19px Arial";
-      drawTrackedText(ctx, "МЕТОД ВИТКА • СОВМЕСТИМОСТЬ", 72, 1295, 3);
-      ctx.textAlign = "right";
-      ctx.fillText(`${feelingsArcana} · ${actionsArcana}`, 1008, 1295);
-
-      const safeName = caption
-        ? caption.toLowerCase().replace(/[^a-zа-яё0-9]+/gi, "-").replace(/^-|-$/g, "").slice(0, 50)
-        : `${feelingsArcana}-${actionsArcana}`;
-      const link = document.createElement("a");
-      link.download = `совместимость-${safeName || `${feelingsArcana}-${actionsArcana}`}.png`;
-      link.href = canvas.toDataURL("image/png");
-      link.click();
     }
 
     document.querySelector("#calculate").addEventListener("click", calculate);
-    elements.download.addEventListener("click", downloadPng);
+    elements.download.addEventListener("click", downloadJpg);
     [elements.birth1, elements.birth2].forEach(input => {
       input.addEventListener("input", () => formatDayMonth(input));
       input.addEventListener("keydown", event => {
