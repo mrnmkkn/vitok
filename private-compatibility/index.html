@@ -258,12 +258,12 @@
 
     <section class="controls" aria-label="Параметры расчёта">
       <label>
-        <span>Дата рождения 1</span>
-        <input id="date1" type="date" required>
+        <span>День и месяц рождения 1</span>
+        <input id="birth1" type="text" inputmode="numeric" maxlength="5" placeholder="25.03" autocomplete="off" required>
       </label>
       <label>
-        <span>Дата рождения 2</span>
-        <input id="date2" type="date" required>
+        <span>День и месяц рождения 2</span>
+        <input id="birth2" type="text" inputmode="numeric" maxlength="5" placeholder="01.12" autocomplete="off" required>
       </label>
       <label class="wide">
         <span>Подпись на карточке – необязательно</span>
@@ -315,8 +315,8 @@
     };
 
     const elements = {
-      date1: document.querySelector("#date1"),
-      date2: document.querySelector("#date2"),
+      birth1: document.querySelector("#birth1"),
+      birth2: document.querySelector("#birth2"),
       caption: document.querySelector("#caption"),
       error: document.querySelector("#error"),
       resultWrap: document.querySelector("#resultWrap"),
@@ -341,12 +341,17 @@
       return ((value - 1) % 22) + 1;
     }
 
-    function parseDate(value) {
-      if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
-      const [year, month, day] = value.split("-").map(Number);
-      const check = new Date(Date.UTC(year, month - 1, day));
-      if (check.getUTCFullYear() !== year || check.getUTCMonth() !== month - 1 || check.getUTCDate() !== day) return null;
+    function parseDayMonth(value) {
+      if (!/^\d{2}\.\d{2}$/.test(value)) return null;
+      const [day, month] = value.split(".").map(Number);
+      const check = new Date(Date.UTC(2000, month - 1, day));
+      if (check.getUTCMonth() !== month - 1 || check.getUTCDate() !== day) return null;
       return { day, month };
+    }
+
+    function formatDayMonth(input) {
+      const digits = input.value.replace(/\D/g, "").slice(0, 4);
+      input.value = digits.length > 2 ? `${digits.slice(0, 2)}.${digits.slice(2)}` : digits;
     }
 
     function scoreText(score) {
@@ -365,11 +370,11 @@
     }
 
     function calculate() {
-      const first = parseDate(elements.date1.value);
-      const second = parseDate(elements.date2.value);
+      const first = parseDayMonth(elements.birth1.value);
+      const second = parseDayMonth(elements.birth2.value);
 
       if (!first || !second) {
-        elements.error.textContent = "Укажите две корректные даты рождения.";
+        elements.error.textContent = "Укажите корректные день и месяц в формате ДД.ММ.";
         elements.resultWrap.classList.remove("visible");
         elements.download.disabled = true;
         return;
@@ -546,9 +551,12 @@
 
     document.querySelector("#calculate").addEventListener("click", calculate);
     elements.download.addEventListener("click", downloadPng);
-    [elements.date1, elements.date2].forEach(input => input.addEventListener("keydown", event => {
-      if (event.key === "Enter") calculate();
-    }));
+    [elements.birth1, elements.birth2].forEach(input => {
+      input.addEventListener("input", () => formatDayMonth(input));
+      input.addEventListener("keydown", event => {
+        if (event.key === "Enter") calculate();
+      });
+    });
   </script>
 </body>
 </html>
