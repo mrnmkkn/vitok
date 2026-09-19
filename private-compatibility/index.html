@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Калькулятор совместимости | Метод Витка</title>
+  <style>
+    :root {
+      --bg: #120f0f;
+      --panel: #1e1818;
+      --panel-2: #241c1c;
+      --text: #f3ece8;
+      --muted: #b9afaa;
+      --line: rgba(243, 236, 232, .16);
+      --positive-1: #8eb99a;
+      --positive-2: #70b485;
+      --positive-3: #4fb46e;
+      --neutral: #aaa39d;
+      --negative-1: #d38884;
+      --negative-2: #dc716c;
+      --negative-3: #f05d58;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% -10%, rgba(112, 180, 133, .10), transparent 36rem),
+        var(--bg);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .app {
+      width: min(100% - 32px, 920px);
+      margin: 0 auto;
+      padding: 44px 0 64px;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .20em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font: 400 clamp(32px, 6vw, 52px)/1.05 Georgia, "Times New Roman", serif;
+    }
+
+    .lead {
+      max-width: 600px;
+      margin: 14px 0 28px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(36, 28, 28, .78);
+      box-shadow: 0 20px 70px rgba(0, 0, 0, .20);
+    }
+
+    label { display: grid; gap: 7px; }
+
+    label span {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    input {
+      width: 100%;
+      min-height: 46px;
+      padding: 0 13px;
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      outline: none;
+      background: #171313;
+      font: inherit;
+      color-scheme: dark;
+    }
+
+    input:focus { border-color: rgba(112, 180, 133, .78); }
+
+    .wide { grid-column: 1 / -1; }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    button {
+      min-height: 46px;
+      padding: 0 18px;
+      border: 0;
+      border-radius: 999px;
+      cursor: pointer;
+      font: 700 13px/1 Arial, sans-serif;
+      letter-spacing: .05em;
+      transition: transform .15s ease, opacity .15s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+    button:active { transform: translateY(0); }
+
+    .primary { color: #102015; background: var(--positive-2); }
+    .secondary { color: var(--text); background: #3a3030; }
+    .secondary:disabled { cursor: default; opacity: .35; transform: none; }
+
+    .error {
+      min-height: 18px;
+      margin-top: 10px;
+      color: var(--negative-2);
+      font-size: 13px;
+    }
+
+    .result-wrap {
+      display: none;
+      justify-content: center;
+      margin-top: 32px;
+    }
+
+    .result-wrap.visible { display: flex; }
+
+    .relationship-card {
+      --feelings: var(--positive-2);
+      --actions: var(--positive-3);
+      width: min(100%, 440px);
+      aspect-ratio: 4 / 5;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      padding: 28px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, .08);
+      background:
+        radial-gradient(circle at 14% 0%, color-mix(in srgb, var(--feelings) 12%, transparent), transparent 42%),
+        linear-gradient(180deg, var(--panel-2), var(--bg));
+      box-shadow: 0 30px 90px rgba(0, 0, 0, .38);
+    }
+
+    .card-kicker,
+    .level-label,
+    .profile-label,
+    .brand {
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: .17em;
+      text-transform: uppercase;
+    }
+
+    .pair-caption {
+      min-height: 0;
+      margin-top: -4px;
+      font: 400 22px/1.12 Georgia, "Times New Roman", serif;
+    }
+
+    .pair-caption:empty { display: none; }
+
+    .level-card {
+      position: relative;
+      display: grid;
+      grid-template-columns: 64px minmax(0, 1fr) auto;
+      grid-template-rows: auto 1fr;
+      gap: 3px 14px;
+      min-height: 112px;
+      padding: 15px 16px;
+      border: 1px solid color-mix(in srgb, var(--accent) 54%, transparent);
+      border-radius: 18px;
+      background: linear-gradient(120deg, color-mix(in srgb, var(--accent) 11%, transparent), rgba(255, 255, 255, .016));
+      box-shadow: inset 4px 0 0 color-mix(in srgb, var(--accent) 82%, transparent);
+    }
+
+    .level-label { grid-column: 1 / 3; }
+
+    .arcana {
+      grid-row: 2;
+      color: var(--accent);
+      font: 400 49px/.88 Georgia, "Times New Roman", serif;
+    }
+
+    .level-title {
+      align-self: center;
+      grid-row: 2;
+      font: 400 21px/1.08 Georgia, "Times New Roman", serif;
+    }
+
+    .score {
+      grid-column: 3;
+      grid-row: 1 / 3;
+      align-self: center;
+      min-width: 48px;
+      padding: 10px 8px;
+      color: #171313;
+      border-radius: 999px;
+      background: var(--accent);
+      text-align: center;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .profile {
+      padding: 15px 17px 16px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, .012);
+    }
+
+    .profile-name {
+      margin-top: 7px;
+      font: 400 24px/1.08 Georgia, "Times New Roman", serif;
+    }
+
+    .brand {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: auto;
+      color: #817875;
+      font-size: 8px;
+      letter-spacing: .15em;
+    }
+
+    @media (max-width: 600px) {
+      .app { width: min(100% - 24px, 920px); padding-top: 28px; }
+      .controls { grid-template-columns: 1fr; padding: 14px; }
+      .wide { grid-column: auto; }
+      .relationship-card { padding: 21px; gap: 9px; }
+      .level-card { min-height: 105px; grid-template-columns: 55px minmax(0, 1fr) auto; padding: 14px; gap: 3px 10px; }
+      .arcana { font-size: 43px; }
+      .level-title { font-size: 18px; }
+      .score { min-width: 44px; font-size: 16px; }
+      .profile-name { font-size: 21px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <p class="eyebrow">Метод Витка</p>
+    <h1>Калькулятор совместимости</h1>
+    <p class="lead">Введите даты рождения. Результат появится в виде компактной карточки, которую можно сохранить для контента.</p>
+
+    <section class="controls" aria-label="Параметры расчёта">
+      <label>
+        <span>Дата рождения 1</span>
+        <input id="date1" type="date" required>
+      </label>
+      <label>
+        <span>Дата рождения 2</span>
+        <input id="date2" type="date" required>
+      </label>
+      <label class="wide">
+        <span>Подпись на карточке – необязательно</span>
+        <input id="caption" type="text" maxlength="70" placeholder="Например: Джиган + Оксана Самойлова">
+      </label>
+      <div class="actions wide">
+        <button class="primary" id="calculate" type="button">Рассчитать</button>
+        <button class="secondary" id="download" type="button" disabled>Скачать PNG</button>
+      </div>
+    </section>
+
+    <div class="error" id="error" role="alert"></div>
+
+    <section class="result-wrap" id="resultWrap" aria-live="polite">
+      <article class="relationship-card" id="card">
+        <div class="card-kicker">Карта отношений</div>
+        <div class="pair-caption" id="pairCaption"></div>
+
+        <div class="level-card" id="feelingsCard">
+          <div class="level-label">Уровень чувств</div>
+          <div class="arcana" id="feelingsArcana"></div>
+          <div class="level-title" id="feelingsTitle"></div>
+          <div class="score" id="feelingsScore"></div>
+        </div>
+
+        <div class="level-card" id="actionsCard">
+          <div class="level-label">Уровень действий</div>
+          <div class="arcana" id="actionsArcana"></div>
+          <div class="level-title" id="actionsTitle"></div>
+          <div class="score" id="actionsScore"></div>
+        </div>
+
+        <div class="profile">
+          <div class="profile-label">Общий профиль</div>
+          <div class="profile-name" id="profileName"></div>
+        </div>
+
+        <div class="brand"><span>МЕТОД ВИТКА • СОВМЕСТИМОСТЬ</span><span id="pairNumbers"></span></div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const ARCANA = {"feelings":{"1":{"score":1,"title":"Близость через проявление"},"2":{"score":3,"title":"Глубокая эмоциональная сопряжённость"},"3":{"score":3,"title":"Тёплая и наполненная близость"},"4":{"score":2,"title":"Близость через надёжность"},"5":{"score":1,"title":"Близость через общие ценности"},"6":{"score":3,"title":"Взаимное притяжение"},"7":{"score":1,"title":"Близость через движение"},"8":{"score":2,"title":"Близость через равенство"},"9":{"score":0,"title":"Близость с пространством"},"10":{"score":0,"title":"Близость волнами"},"11":{"score":2,"title":"Сильная эмоциональная вовлечённость"},"12":{"score":-1,"title":"Близость через принятие"},"13":{"score":-2,"title":"Близость через завершения"},"14":{"score":3,"title":"Близость через баланс"},"15":{"score":2,"title":"Сильное эмоциональное притяжение"},"16":{"score":-3,"title":"Хрупкая эмоциональная опора"},"17":{"score":2,"title":"Близость через вдохновение"},"18":{"score":-3,"title":"Эмоциональная закрытость"},"19":{"score":3,"title":"Открытая и тёплая близость"},"20":{"score":1,"title":"Ощущение родного человека"},"21":{"score":3,"title":"Целый эмоциональный мир"},"22":{"score":1,"title":"Близость без лишних рамок"}},"actions":{"1":{"score":2,"title":"Отношения через инициативу"},"2":{"score":2,"title":"Забота через внимание к другому"},"3":{"score":3,"title":"Создание общей жизни"},"4":{"score":3,"title":"Устойчивая система двоих"},"5":{"score":2,"title":"Жизнь по общим принципам"},"6":{"score":2,"title":"Действовать из любви и заботы"},"7":{"score":2,"title":"Драйв совместного движения"},"8":{"score":2,"title":"Честное партнёрство"},"9":{"score":-1,"title":"Каждый сохраняет свой путь"},"10":{"score":0,"title":"Отношения через перемены"},"11":{"score":3,"title":"Мощная энергия действия"},"12":{"score":-2,"title":"Зависание вместо действия"},"13":{"score":0,"title":"Действие через завершение"},"14":{"score":2,"title":"Совместное созидание"},"15":{"score":1,"title":"Сила желания и реализации"},"16":{"score":-3,"title":"Крах и перестройка"},"17":{"score":1,"title":"Яркое совместное проявление"},"18":{"score":-3,"title":"Избегание ясного действия"},"19":{"score":3,"title":"Совместное создание жизни"},"20":{"score":2,"title":"Создание общей семьи"},"21":{"score":3,"title":"Большой общий мир"},"22":{"score":-1,"title":"Спонтанность без опоры"}}};
+
+    const COLORS = {
+      "3": "#4fb46e", "2": "#70b485", "1": "#8eb99a", "0": "#aaa39d",
+      "-1": "#d38884", "-2": "#dc716c", "-3": "#f05d58"
+    };
+
+    const elements = {
+      date1: document.querySelector("#date1"),
+      date2: document.querySelector("#date2"),
+      caption: document.querySelector("#caption"),
+      error: document.querySelector("#error"),
+      resultWrap: document.querySelector("#resultWrap"),
+      card: document.querySelector("#card"),
+      pairCaption: document.querySelector("#pairCaption"),
+      feelingsCard: document.querySelector("#feelingsCard"),
+      actionsCard: document.querySelector("#actionsCard"),
+      feelingsArcana: document.querySelector("#feelingsArcana"),
+      actionsArcana: document.querySelector("#actionsArcana"),
+      feelingsTitle: document.querySelector("#feelingsTitle"),
+      actionsTitle: document.querySelector("#actionsTitle"),
+      feelingsScore: document.querySelector("#feelingsScore"),
+      actionsScore: document.querySelector("#actionsScore"),
+      profileName: document.querySelector("#profileName"),
+      pairNumbers: document.querySelector("#pairNumbers"),
+      download: document.querySelector("#download")
+    };
+
+    let currentResult = null;
+
+    function reduceTo22(value) {
+      return ((value - 1) % 22) + 1;
+    }
+
+    function parseDate(value) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
+      const [year, month, day] = value.split("-").map(Number);
+      const check = new Date(Date.UTC(year, month - 1, day));
+      if (check.getUTCFullYear() !== year || check.getUTCMonth() !== month - 1 || check.getUTCDate() !== day) return null;
+      return { day, month };
+    }
+
+    function scoreText(score) {
+      return score > 0 ? `+${score}` : String(score);
+    }
+
+    function profileFor(feelingsScore, actionsScore) {
+      const f = Math.sign(feelingsScore);
+      const a = Math.sign(actionsScore);
+      if (f > 0 && a > 0) return "Ресурсные отношения";
+      if ((f > 0 && a < 0) || (f < 0 && a > 0)) return "Контрастные отношения";
+      if (f < 0 && a < 0) return "Тяжёлые отношения";
+      if ((f < 0 && a === 0) || (f === 0 && a < 0)) return "Сложные отношения";
+      if ((f > 0 && a === 0) || (f === 0 && a > 0)) return "Благоприятные отношения";
+      return "Открытый потенциал";
+    }
+
+    function calculate() {
+      const first = parseDate(elements.date1.value);
+      const second = parseDate(elements.date2.value);
+
+      if (!first || !second) {
+        elements.error.textContent = "Укажите две корректные даты рождения.";
+        elements.resultWrap.classList.remove("visible");
+        elements.download.disabled = true;
+        return;
+      }
+
+      const feelingsArcana = reduceTo22(first.day + second.day);
+      const actionsArcana = reduceTo22(first.day + first.month + second.day + second.month);
+      const feelings = ARCANA.feelings[feelingsArcana];
+      const actions = ARCANA.actions[actionsArcana];
+      const profile = profileFor(feelings.score, actions.score);
+      const caption = elements.caption.value.trim();
+
+      currentResult = { feelingsArcana, actionsArcana, feelings, actions, profile, caption };
+      elements.error.textContent = "";
+      elements.pairCaption.textContent = caption;
+      elements.feelingsArcana.textContent = feelingsArcana;
+      elements.actionsArcana.textContent = actionsArcana;
+      elements.feelingsTitle.textContent = feelings.title;
+      elements.actionsTitle.textContent = actions.title;
+      elements.feelingsScore.textContent = scoreText(feelings.score);
+      elements.actionsScore.textContent = scoreText(actions.score);
+      elements.profileName.textContent = profile;
+      elements.pairNumbers.textContent = `${feelingsArcana} · ${actionsArcana}`;
+
+      const feelingsColor = COLORS[feelings.score];
+      const actionsColor = COLORS[actions.score];
+      elements.card.style.setProperty("--feelings", feelingsColor);
+      elements.card.style.setProperty("--actions", actionsColor);
+      elements.feelingsCard.style.setProperty("--accent", feelingsColor);
+      elements.actionsCard.style.setProperty("--accent", actionsColor);
+      elements.resultWrap.classList.add("visible");
+      elements.download.disabled = false;
+      elements.resultWrap.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function roundRect(ctx, x, y, width, height, radius) {
+      const r = Math.min(radius, width / 2, height / 2);
+      ctx.beginPath();
+      ctx.roundRect(x, y, width, height, r);
+    }
+
+    function wrapLines(ctx, text, maxWidth) {
+      const words = text.split(/\s+/);
+      const lines = [];
+      let line = "";
+      for (const word of words) {
+        const test = line ? `${line} ${word}` : word;
+        if (ctx.measureText(test).width <= maxWidth || !line) line = test;
+        else { lines.push(line); line = word; }
+      }
+      if (line) lines.push(line);
+      return lines;
+    }
+
+    function drawTrackedText(ctx, text, x, y, spacing) {
+      let cursor = x;
+      for (const char of text) {
+        ctx.fillText(char, cursor, y);
+        cursor += ctx.measureText(char).width + spacing;
+      }
+    }
+
+    function drawLevel(ctx, y, label, arcana, item, color) {
+      const x = 72;
+      const width = 936;
+      const height = 248;
+      ctx.save();
+      const gradient = ctx.createLinearGradient(x, y, x + width, y + height);
+      gradient.addColorStop(0, `${color}20`);
+      gradient.addColorStop(1, "rgba(255,255,255,.015)");
+      ctx.fillStyle = gradient;
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      roundRect(ctx, x, y, width, height, 38);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = color;
+      roundRect(ctx, x, y, 12, height, 6);
+      ctx.fill();
+
+      ctx.fillStyle = "#b9afaa";
+      ctx.font = "24px Arial";
+      drawTrackedText(ctx, label.toUpperCase(), x + 42, y + 50, 4);
+
+      ctx.fillStyle = color;
+      ctx.font = "112px Georgia";
+      ctx.fillText(String(arcana), x + 42, y + 181);
+
+      ctx.fillStyle = "#f3ece8";
+      ctx.font = "48px Georgia";
+      const lines = wrapLines(ctx, item.title, 560).slice(0, 2);
+      const lineHeight = 52;
+      const titleY = y + 127 - ((lines.length - 1) * lineHeight) / 2;
+      lines.forEach((line, index) => ctx.fillText(line, x + 210, titleY + index * lineHeight));
+
+      ctx.fillStyle = color;
+      roundRect(ctx, x + width - 136, y + 73, 92, 92, 46);
+      ctx.fill();
+      ctx.fillStyle = "#171313";
+      ctx.font = "bold 40px Arial";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(scoreText(item.score), x + width - 90, y + 119);
+      ctx.restore();
+    }
+
+    function downloadPng() {
+      if (!currentResult) return;
+      const canvas = document.createElement("canvas");
+      canvas.width = 1080;
+      canvas.height = 1350;
+      const ctx = canvas.getContext("2d");
+      const { feelingsArcana, actionsArcana, feelings, actions, profile, caption } = currentResult;
+      const feelingsColor = COLORS[feelings.score];
+      const actionsColor = COLORS[actions.score];
+
+      const bg = ctx.createLinearGradient(0, 0, 0, 1350);
+      bg.addColorStop(0, "#241c1c");
+      bg.addColorStop(1, "#120f0f");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, 1080, 1350);
+
+      const glow = ctx.createRadialGradient(170, 0, 10, 170, 0, 520);
+      glow.addColorStop(0, `${feelingsColor}22`);
+      glow.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = glow;
+      ctx.fillRect(0, 0, 1080, 560);
+
+      ctx.fillStyle = "#b9afaa";
+      ctx.font = "25px Arial";
+      drawTrackedText(ctx, "КАРТА ОТНОШЕНИЙ", 72, 82, 5);
+
+      let firstCardY = 118;
+      if (caption) {
+        ctx.fillStyle = "#f3ece8";
+        ctx.font = "54px Georgia";
+        const captionLines = wrapLines(ctx, caption, 930).slice(0, 2);
+        captionLines.forEach((line, index) => ctx.fillText(line, 72, 153 + index * 58));
+        firstCardY = 230 + Math.max(0, captionLines.length - 1) * 50;
+      }
+
+      drawLevel(ctx, firstCardY, "Уровень чувств", feelingsArcana, feelings, feelingsColor);
+      drawLevel(ctx, firstCardY + 276, "Уровень действий", actionsArcana, actions, actionsColor);
+
+      const profileY = firstCardY + 552;
+      ctx.strokeStyle = "rgba(243,236,232,.20)";
+      ctx.lineWidth = 2;
+      ctx.fillStyle = "rgba(255,255,255,.012)";
+      roundRect(ctx, 72, profileY, 936, 178, 38);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#b9afaa";
+      ctx.font = "24px Arial";
+      drawTrackedText(ctx, "ОБЩИЙ ПРОФИЛЬ", 112, profileY + 53, 4);
+      ctx.fillStyle = "#f3ece8";
+      ctx.font = "55px Georgia";
+      ctx.fillText(profile, 112, profileY + 127);
+
+      ctx.fillStyle = "#817875";
+      ctx.font = "19px Arial";
+      drawTrackedText(ctx, "МЕТОД ВИТКА • СОВМЕСТИМОСТЬ", 72, 1295, 3);
+      ctx.textAlign = "right";
+      ctx.fillText(`${feelingsArcana} · ${actionsArcana}`, 1008, 1295);
+
+      const safeName = caption
+        ? caption.toLowerCase().replace(/[^a-zа-яё0-9]+/gi, "-").replace(/^-|-$/g, "").slice(0, 50)
+        : `${feelingsArcana}-${actionsArcana}`;
+      const link = document.createElement("a");
+      link.download = `совместимость-${safeName || `${feelingsArcana}-${actionsArcana}`}.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    }
+
+    document.querySelector("#calculate").addEventListener("click", calculate);
+    elements.download.addEventListener("click", downloadPng);
+    [elements.date1, elements.date2].forEach(input => input.addEventListener("keydown", event => {
+      if (event.key === "Enter") calculate();
+    }));
+  </script>
+</body>
+</html>
