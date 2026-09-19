@@ -120,8 +120,6 @@
     button:active { transform: translateY(0); }
 
     .primary { color: #102015; background: var(--positive-2); }
-    .secondary { color: var(--text); background: #3a3030; }
-    .secondary:disabled { cursor: default; opacity: .35; transform: none; }
 
     .error {
       min-height: 18px;
@@ -271,7 +269,6 @@
       </label>
       <div class="actions wide">
         <button class="primary" id="calculate" type="button">Рассчитать</button>
-        <button class="secondary" id="download" type="button" disabled>Скачать JPG</button>
       </div>
     </section>
 
@@ -331,11 +328,8 @@
       feelingsScore: document.querySelector("#feelingsScore"),
       actionsScore: document.querySelector("#actionsScore"),
       profileName: document.querySelector("#profileName"),
-      pairNumbers: document.querySelector("#pairNumbers"),
-      download: document.querySelector("#download")
+      pairNumbers: document.querySelector("#pairNumbers")
     };
-
-    let currentResult = null;
 
     function reduceTo22(value) {
       return ((value - 1) % 22) + 1;
@@ -376,7 +370,6 @@
       if (!first || !second) {
         elements.error.textContent = "Укажите корректные день и месяц в формате ДД.ММ.";
         elements.resultWrap.classList.remove("visible");
-        elements.download.disabled = true;
         return;
       }
 
@@ -387,7 +380,6 @@
       const profile = profileFor(feelings.score, actions.score);
       const caption = elements.caption.value.trim();
 
-      currentResult = { feelingsArcana, actionsArcana, feelings, actions, profile, caption };
       elements.error.textContent = "";
       elements.pairCaption.textContent = caption;
       elements.feelingsArcana.textContent = feelingsArcana;
@@ -406,88 +398,10 @@
       elements.feelingsCard.style.setProperty("--accent", feelingsColor);
       elements.actionsCard.style.setProperty("--accent", actionsColor);
       elements.resultWrap.classList.add("visible");
-      elements.download.disabled = false;
       elements.resultWrap.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
-    async function downloadJpg() {
-      if (!currentResult) return;
-
-      const source = elements.card;
-      const clone = source.cloneNode(true);
-      clone.style.width = "440px";
-      clone.style.height = "550px";
-      clone.style.aspectRatio = "auto";
-      clone.style.boxShadow = "none";
-
-      const wrapper = document.createElementNS("http://www.w3.org/1999/xhtml", "div");
-      wrapper.style.width = "440px";
-      wrapper.style.height = "550px";
-      wrapper.appendChild(clone);
-
-      const style = document.createElementNS("http://www.w3.org/1999/xhtml", "style");
-      style.textContent = Array.from(document.styleSheets)
-        .flatMap(sheet => {
-          try { return Array.from(sheet.cssRules, rule => rule.cssText); }
-          catch { return []; }
-        })
-        .join("\n");
-      wrapper.prepend(style);
-
-      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-      svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-      svg.setAttribute("width", "1080");
-      svg.setAttribute("height", "1350");
-      svg.setAttribute("viewBox", "0 0 440 550");
-
-      const foreignObject = document.createElementNS("http://www.w3.org/2000/svg", "foreignObject");
-      foreignObject.setAttribute("width", "440");
-      foreignObject.setAttribute("height", "550");
-      foreignObject.appendChild(wrapper);
-      svg.appendChild(foreignObject);
-
-      const blob = new Blob([new XMLSerializer().serializeToString(svg)], { type: "image/svg+xml;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-
-      try {
-        const image = new Image();
-        image.src = url;
-        await new Promise((resolve, reject) => {
-          image.onload = resolve;
-          image.onerror = () => reject(new Error("Не удалось подготовить изображение."));
-        });
-
-        const canvas = document.createElement("canvas");
-        canvas.width = 1080;
-        canvas.height = 1350;
-        const ctx = canvas.getContext("2d");
-        ctx.fillStyle = "#120f0f";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-
-        const { feelingsArcana, actionsArcana, caption } = currentResult;
-        const safeName = caption
-          ? caption.toLowerCase().replace(/[^a-zа-яё0-9]+/gi, "-").replace(/^-|-$/g, "").slice(0, 50)
-          : `${feelingsArcana}-${actionsArcana}`;
-
-        canvas.toBlob(jpg => {
-          if (!jpg) return;
-          const link = document.createElement("a");
-          const jpgUrl = URL.createObjectURL(jpg);
-          link.download = `совместимость-${safeName || `${feelingsArcana}-${actionsArcana}`}.jpg`;
-          link.href = jpgUrl;
-          link.click();
-          setTimeout(() => URL.revokeObjectURL(jpgUrl), 1000);
-        }, "image/jpeg", .96);
-      } catch (error) {
-        elements.error.textContent = error.message || "Не удалось сохранить JPG.";
-      } finally {
-        URL.revokeObjectURL(url);
-      }
-    }
-
     document.querySelector("#calculate").addEventListener("click", calculate);
-    elements.download.addEventListener("click", downloadJpg);
     [elements.birth1, elements.birth2].forEach(input => {
       input.addEventListener("input", () => formatDayMonth(input));
       input.addEventListener("keydown", event => {
